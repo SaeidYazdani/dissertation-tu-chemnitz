@@ -1,0 +1,238 @@
+%! Author = Saeid Yazdani
+%! Date = 5/14/2023
+
+
+\chapter{Time-Variant Based \acs{DPS}}
+\label{ch:proposed-control-loop}
+
+In this chapter, we will describe in detail the implementation of a \ac{DPS}
+based on the proposed \emph{Time-Variant} approach for control loop and output
+regulation.
+
+Throughout this text, the \ac{DPS} will be referred to by its nickname,
+\ac{HVS}.
+One of the key advantages of this system is its ability to provide a wide range
+of voltage and current levels, making it suitable not only for low-power devices
+like microcontrollers and logic ICs but also for high-power applications
+while maintaining acceptable accuracy and precision at all ranges.
+
+
+\section{System Specification}
+\label{sec:ch-sys-spec-intro}
+
+Comprehensive specifications have been defined for the proposed \ac{DPS} system.
+The \ac{HVS} will be a Four-Quadrant (\autoref{fig:fourd-quadrant-psu-overview})
+bipolar \ac{SMU} capable of sourcing, sinking and measuring negative and
+positive voltages and currents according to standard features expected from
+a laboratory-grade power supply with specifications listed in
+\autoref{tab:hvs-measurement-nominal-accuracy}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=1.05]
+    {figures/four-quadrant-psu-coordinates}
+    \caption[Four-Quadrant Power Supply]{Overview of output directions and
+    modes of a four-quadrant power supply.}
+    \label{fig:fourd-quadrant-psu-overview}
+\end{figure}
+
+The \ac{HVS} integrates standard features and safety measures
+that are expected from a power supply for highly sophisticated \acp{DUT}:
+We guarantee safe and reliable operation both for the operator and
+overload-sensitive \acp{DUT}.
+Thanks to a digital controller, many safety features can be realized in software
+rather than in hardware.
+
+\begin{table}[h!] % [h1] Causes the table be positioned within the text
+    \centering
+    \begin{tabular}{l|c|c}
+        \toprule
+        \textbf{Parameter} & \textbf{Range}                            & \textbf{Accuracy} \\
+        \midrule
+        \midrule
+        Source Voltage     & \SI{100}{\milli\volt} to \SI{1000}{\volt} & 0.05\%            \\
+
+        Measure Voltage    & \SI{1000}{\volt}                          & 0.2\%             \\
+        \midrule
+        Measure Current    & \SI{10}{\nano\ampere}                     & 1\%               \\
+
+        \text{  } & \SI{100}{\nano\ampere} to \SI{10}{\milli\ampere}
+        & 0.05\% \\
+
+        \text{  } & \SI{100}{\milli\ampere} to \SI{1}{\ampere}
+        & 0.1\% \\
+
+        \text{  }            & \SI{10}{\ampere}                          & 0.2\%
+
+    \end{tabular}
+    \caption{\acs{HVS} Output and Measurement expected accuracy levels}
+    \label{tab:hvs-measurement-nominal-accuracy}
+\end{table}
+
+\ac{OCP} and \ac{OVP} can be realized in software, since the system has
+near-instantaneous awareness of the actual output levels and can constantly compare
+the required voltage and current levels set by the application with
+pre-defined limits.
+
+If for any reason a \ac{DUT} starts to draw more power than intended,
+the digital controller can immediately detect and react to that load condition.
+For absolute safety, the \ac{HVS} will incorporate a hardware
+limiting circuit per output range, called \emph{static}
+protection.
+
+
+\section{System overview}
+\label{sec:system-overview}
+
+The \ac{HVS} is built as a modular system as presented in
+\autoref{fig:hvs-hvs-controller-board-diagram} and contains the following
+main blocks:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+
+    \item \textbf{Controller Board:} Tasked with system management and control
+    which contains the following items:
+    \begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+        \item Microcontroller: communication and control, mode configuration,
+        power-supply settings, test controller.
+        \item FPGA: digital control loop, ADC/DAC interfaces, measurement
+        functions, clamping control, averaging and sampling functions.
+        \item \acs{ADC} and \acs{DAC} chips.
+    \end{itemize}
+
+    \item \textbf{Amplifier Board:} A high-voltage high-current four-quadrant
+    amplifier is the driving force. The amplifier is a 3-stage design with:
+    \begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+        \item {high-precision pre-amp for high loop gain (\SI{\pm10}{\volt})}
+        \item {high-voltage amplifier (\SI{\pm350}{\volt})}
+        \item {high-current booster stage (\SI{\pm10}{\ampere} pulsed or \SI{\pm2}{\ampere} continuous)}
+    \end{itemize}
+
+    \item \textbf{Frontend:} Is the final stage of the output and
+    contains output connectors and pin relays as well as buffer amplifiers for
+    sampling the output to be redirected to the control processor for feedback
+    calculations.
+    \begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+        \item {Programmable shunt resistor network for current measurements,}
+        \item {Programmable voltage divider network for voltage measurements.}
+    \end{itemize}
+
+    \item \textbf{Current Limiter:} Contains an array of resistors for limiting
+    output currents in emergency caes to safe values specified in test programs.
+
+    \item \textbf{Main Switching Supply:} Tracking rail \acs{DC}/\acs{DC}
+    converters for the power amplifier to minimize internal losses:
+
+    \begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+        \item
+        A switching supply sets all rails to \( \lvert V_{OUT} \rvert +
+        \lvert V_{DROP} \rvert \), where \( V_{DROP} \) is the minimum rail
+        overhead to guarantee perfect amplifier operation.
+
+        \item
+        By using a \acs{FET}-bases source follower circuit the expected votlage
+        drop will be small as a \acs{FET}-based source follower
+        ciruit the minimum voltage drop will be larger than
+        \( R_{\text{DS(ON)}} \times I_{LOAD} \)
+        since the channel resistances of power \acs{FET}s are in the range of a
+        few \SI{}{\milli\ohm}.
+    \end{itemize}
+
+    \item \textbf{Monitor Board:} A set of buffer amplifiers to allow
+    for the monitoring the output of the system in analog fashion (e.g. connect to
+    and oscilloscope) for observation or debugging. The board contains:
+    \begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+        \item {Normalized analog monitor outputs, }
+        \item {Modulation input for external analogue control.}
+    \end{itemize}
+
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]
+    {figures/hvs/digital-board-connections}
+    \caption[HVS Control board]{Control board in HVS contains the digital
+    control loop and an interface between the user and analog front end}
+    \label{fig:hvs-hvs-controller-board-diagram}
+\end{figure}
+
+The control loop algorithm is realized on the FPGA which is interfaced through
+\ac{LVDS} to high-speed \acs{ADC}s and
+\acs{DAC}s which read voltages and currents on multiple nodes of the
+feedback path and drive output stage amplifiers respectively.
+
+Communication between FPGA and microcontroller is implemented using an
+AVALON-like\footnote{
+    The Avalon® Interface is a bus protocol used in FPGA designs to facilitate
+    communication between components and is designed by Altera Corporation, which is
+    now part of Intel Corporation.} bus for fast parallel communication betweenthe
+two units.
+All the settings and variables associated with the control loop operation are in
+registers defined in the \ac{FPGA}.
+
+The \ac{MCU} and high-voltage supplies, current limiter
+board and gain setting switches on the analog front-end (\ac{ADC})
+communicate via an \acs{SPI} interface.
+
+The communication with the outside world comes through a \acs{USB} interface
+and users or other instruments (e.g. \acs{ATE} test control software) will be
+able to operate and manage the system using a \acs{GUI} or through a
+dedicated \ac{API}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{\acs{FPGA} and \acs{MCU} Structures}
+\label{sec:fpga-mcu-structures}
+
+The design is implemented on an Intel Cyclone V \ac{FPGA}.
+The \ac{FPGA} is responsible for on-the-fly compensation adaptation,
+output signal supervision on several channels (safety features), and the
+loop-back d-to-a converters.
+
+Three clocked register banks based on D flip-flops are implemented in the FPGA
+for storing configuration settings such as output management,
+scaling of \ac{DAC} and \ac{ADC} depending on the active selected range, and
+special functions such as custom waveform generation by the \ac{HVS}.
+These registers are read and written via the parallel Avalon® bus by
+the MCU.
+
+The Avalon bus is implemented as a master/slave \emph{Memory Mapped} (MM)
+interface where the \ac{MCU} as the master can read from or write to specific
+memory-mapped addresses in the \ac{FPGA} (slave).
+This bus implementation supports operations like read, write, and
+burst transfers (e.g. for measurement readouts).
+
+The physical implementation of this bus uses two complete ports of the
+\ac{MCU} (16 I/O pins each), for address and data in addition to extra I/O pins
+from another \ac{MCU} port dedicated to data transfer control signals such as
+read or write requests.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]
+    {figures/design-realization/fpga-and-mcu-block}
+    \caption[\acs{FPGA} and \acs{MCU} Connection Diagram]{
+        Block diagram of \acs{FPGA} and \acs{MCU} and their internal
+        connections.
+    }
+    \label{fig:fpga-mcu-diagram}
+\end{figure}
+
+This implementation allows the bus to be used in \emph{Streaming} (ST)
+mode, if required.
+In \emph{ST} mode, the focus will be on high-throughput, low-latency data
+transfer for efficient streaming.
+
+The \ac{MCU} sets all static and dynamic values such as calibration data,
+range-selection and output relays at start-up and during runtime.
+
+The list of registers and their description is presented in
+\hyperref[sec:hvs-fpga-register-map]{Appendix A}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{ch_smu_prototype_detials/control_loop_details/content}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{ch_smu_prototype_detials/compensation/content}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,68 @@
+%! Author = Saeid Yazdani
+%! Date = 9/6/2024
+
+\section{Software Design Approach}
+\label{sec:software-design-approach}
+
+In the context of embedded systems and measurement equipment, two
+approaches are often considered: the \emph{Operating System} approach and the
+\emph{Bare-Metal} approach.
+
+As of recent, the industry has increasingly shifted toward \acs{O/S}-based
+system software, particularly in more complex and feature-rich equipment
+such as high-end oscilloscopes and signal analyzers.
+
+The use of \acs{SoC}s allows for the integration of powerful \acs{FPGA}s and
+\acs{CPU}s 
+capable of running operating systems like \emph{Linux}, which provide a
+rich user interface, multitasking, and connectivity
+options such as Ethernet, Wi-Fi, and USB.
+This trend is driven by the demand for advanced features like touchscreen
+interfaces, remote access, data logging, and the ability to run sophisticated
+built-in analysis software.
+
+However, the premium look and feel of the user interface and software
+capabilities of such systems are associated with a set of challenges, of which:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item \textbf{Development Complexity:}
+    The requirement for managing multiple layers such as the
+    \acs{O/S} kernel, drivers, libraries, user-space applications and
+    all the interdependencies between the layers.
+
+    \item \textbf{Software System Reliability:}
+    \acs{O/S}-Based systems, particularly those handling both user interfaces
+    and hardware control may face reliability issues such as kernel panics
+    and software crashes which are unacceptable and often
+    considered a safety issue for equipment such as power supplies.
+
+    \item \textbf{Security Concerns:}
+    Vulnerabilities in the \acs{O/S}, libraries, or custom software can lead to
+    unauthorized access or data breaches if the equipment is networked or offers
+    remote access.
+
+    \item \textbf{Startup and Task Latencies:}
+    The equipment may require fast startup times and immediate availability.
+    Booting a full \acs{O/S}, especially with \acs{GUI} and other services,
+    introduces delay.
+    These operating systems are often not optimized for realtime tasks
+    due to their scheduling strategy.
+
+\end{itemize}
+
+On the contrary, a bare-metal system allows for direct control over hardware
+with no operating system overhead that simplifies development
+as there is no need to manage complex \acs{O/S}-related tasks such as
+multitasking or memory management.
+Minimal latency and predictable behavior can be easily achieved by direct
+interaction with the hardware.
+
+However, bare-metal development can become effort-intensive for complex systems
+requiring advanced features (e.g., networking, GUIs) that would be easier to
+implement on an \acs{O/S}.
+Therefore, the choice between \acs{O/S}-based or bare-metal approach is tightly
+coupled with the expected functionality of the equipment, the complexity of
+the data handling and processing as well as the size and skill of
+the development team.
+For these reasons, bare-metal software development is the selected approach
+for the proposed \acs{DPS}.

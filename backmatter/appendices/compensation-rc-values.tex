@@ -1,0 +1,76 @@
+%! Author = Saeid Yazdani
+%! Date = 8/15/2024
+
+
+\section{List of Compensation Network Component Values}
+\label{sec:compensation-network-values}
+
+
+
+\begingroup
+\tiny
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{0.82}
+\setlength{\LTpre}{8pt}
+\setlength{\LTpost}{0pt}
+
+\begin{longtable}{>{\centering\arraybackslash}p{0.1\textwidth}|>{\centering\arraybackslash}p{0.4\textwidth}|>{\centering\arraybackslash}p{0.2\textwidth}}
+    \hline
+    \textbf{Bit} & \textbf{Register[bitfield]} & \textbf{Value}        \\
+    \hline
+    \endfirsthead
+
+    \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+    \hline
+    \textbf{Bit} & \textbf{Register[bitfield]} & \textbf{Value}        \\
+    \hline
+    \endhead
+
+    \hline \multicolumn{3}{r}{{Continued on next page}} \\
+    \endfoot
+
+    \hline
+    \endlastfoot
+
+    \multicolumn{3}{c}{\textbf{Pre-Amplifier Compensation Capacitor Values}} \\ \hline
+    7            & PRECMP\_C[8]                & \SI{100}{\pico\farad} \\
+    6            & PRECMP\_C[7]                & \SI{220}{\pico\farad} \\
+    5            & PRECMP\_C[6]                & \SI{470}{\pico\farad} \\
+    4            & PRECMP\_C[5]                & \SI{1}{\nano\farad}   \\
+    3            & PRECMP\_C[4]                & \SI{2.2}{\nano\farad} \\
+    2            & PRECMP\_C[3]                & \SI{4.7}{\nano\farad} \\
+    1            & PRECMP\_C[2]                & \SI{10}{\nano\farad}  \\
+    0            & PRECMP\_C[1]                & \SI{22}{\nano\farad}  \\ \hline
+
+    \multicolumn{3}{c}{\textbf{Pre-Amplifier Compensation Resistor Values}} \\ \hline
+    7            & PRECMP\_R[8]                & \SI{680}{\ohm}        \\
+    6            & PRECMP\_R[7]                & \SI{330}{\ohm}        \\
+    5            & PRECMP\_R[6]                & \SI{150}{\ohm}        \\
+    4            & PRECMP\_R[5]                & \SI{82}{\ohm}         \\
+    3            & PRECMP\_R[4]                & \SI{47}{\ohm}         \\
+    2            & PRECMP\_R[3]                & \SI{22}{\ohm}         \\
+    1            & PRECMP\_R[2]                & \SI{10}{\ohm}         \\
+    0            & PRECMP\_R[1]                & \SI{5.1}{\ohm}        \\ \hline
+
+    \multicolumn{3}{c}{\textbf{Power-Amplifier Compensation Capacitor Values}} \\ \hline
+    8            & PACMP\_C[9]                 & \SI{5}{\nano\farad}   \\
+    7            & PACMP\_C[8]                 & \SI{2}{\nano\farad}   \\
+    6            & PACMP\_C[7]                 & \SI{1}{\nano\farad}   \\
+    5            & PACMP\_C[6]                 & \SI{220}{\pico\farad} \\
+    4            & PACMP\_C[5]                 & \SI{69}{\pico\farad}  \\
+    3            & PACMP\_C[4]                 & \SI{44}{\pico\farad}  \\
+    2            & PACMP\_C[3]                 & \SI{22}{\pico\farad}  \\
+    1            & PACMP\_C[2]                 & \SI{10}{\pico\farad}  \\
+    0            & PACMP\_C[1]                 & \SI{5}{\pico\farad}   \\ \hline
+
+    \multicolumn{3}{c}{\textbf{Power-Amplifier Compensation Resistor Values}} \\ \hline
+    6            & PACMP\_R[7]                 & \SI{660}{\ohm}        \\
+    5            & PACMP\_R[6]                 & \SI{300}{\ohm}        \\
+    4            & PACMP\_R[5]                 & \SI{164}{\ohm}        \\
+    3            & PACMP\_R[4]                 & \SI{86}{\ohm}         \\
+    2            & PACMP\_R[3]                 & \SI{44}{\ohm}         \\
+    1            & PACMP\_R[2]                 & \SI{20}{\ohm}         \\
+    0            & PACMP\_R[1]                 & \SI{10}{\ohm}         \\
+    \bottomrule
+\end{longtable}
+\endgroup

@@ -1,0 +1,163 @@
+%! Author = Saeid Yazdani
+%! Date = 7/18/2024
+
+
+\section{Time-Variant Power Supply Control Loop}
+\label{subsec:time-variant-comp-network}
+
+A pure analog control loop is classified as a \emph{Time-Invariant} system
+since the output response of the system remains consistent regardless
+of the point of time an input is applied.
+The system's behavior and characteristics are fixed, determined by its physical
+components and their configurations.
+In such systems, for any given input, the output will be the same, except due to
+ageing-related drift of the components or influence of noise in the environment.
+
+On the other hand, a hybrid digital-analog control loop represents
+a \emph{Time-Variant} system.
+The digital section introduces adaptability and real-time response.
+The digital components can modify their behavior based on pre-programmed
+algorithms or sets of conditions, allowing the system to adjust its output
+dynamically in response to changes in the input.
+This ability to alter the output on the fly provides flexibility and precision
+in applications where the operating conditions can vary widely or require rapid
+adjustments.
+
+The primary challenge in implementing adaptive compensation in analog circuitry
+lies in the switch controller, which is digital rather than analog as
+shown in \autoref{fig:traditional-psu-loop}.
+This inherent digital nature necessitates the integration of a switching
+processor, enabling signal processing in the digital domain through a
+series of \ac{ADC} and \ac{DAC} conversions.
+
+\begin{figure}
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/dps_algorithms_psu/traditional-analog-power-supply-circuit}
+    \caption[Comparison of Time-Invariant and Time-Variant ]{
+        Traditional analog power supply control loop.
+        \emph{Power Stage} Converts the input power to the desired output power
+        and typically includes main power switch (\acs{MOSFET} or \acs{BJT})
+        controlled by the duty cycle of a PWM generator.
+        The \emph{Feedback Network} senses the output voltage or current and
+        feeds back to the error amplifier for comparison with a reference
+        voltage.
+        Stabilization of the control loop is done by \acs{RLC}-based filters in
+        the \emph{Compensation Network}.
+    }
+    \label{fig:traditional-psu-loop}
+\end{figure}
+
+Adaptive compensation can be more effectively achieved by utilizing \ac{DSP}.
+DSPs allow for precise and flexible adjustments, accommodating a wide range of
+operating conditions and enhancing overall system performance.
+Furthermore, DSP-based systems facilitate real-time monitoring and adjustment
+of compensation parameters, providing an optimal balance between stability and
+response time.
+This dynamic capability ensures that the system can efficiently respond to
+changes in load and operating conditions, maintaining performance and preventing
+issues such as overshoot or instability.
+
+In the proposed power supply we use \ac{DSP} for adaptive control algorithms,
+on-the-fly compensation, and signal monitoring for safety reasons
+(e.g. clamping functions).
+
+\autoref{fig:invariant-vs-variant-control} demonstrates the dynamic adjustment
+of compensation networks to slow down the amplifiers just before overshoot
+occurs.
+This technique requires parameter sets that are dependent on both the range
+and the load conditions.
+The necessary parameters are stored in a memory organized by the processor,
+with all loop calculations executed by a high-speed \ac{DSP} core within
+a \ac{FPGA}.
+This method ensures precise control and optimal performance by dynamically
+adapting to varying operational conditions.
+
+\begin{figure}[htbp]
+    \centering
+    \printfitgraphics[0.62\textheight]{figures/dps_algorithms_psu/time-invariant_vs_time-variant_control}
+    \caption[Comparison of Time-Invariant and Time-Variant ]{
+        Predictive and adaptive compensation settings in a digital control loop.
+        Pure analog compensation (top) and adaptive compensation (bottom) where
+        dotted red and blue waveforms are analog and solid lines are digitally
+        compensated waveform.
+        When used in an \ac{ATE} environment, the \ac{DUT} characteristics
+        and overall electrical characteristics of the whole setup
+        (including load board data) can be fed to the control algorithm
+        and be used for optimized reactions to changes in the load conditions.
+
+    }
+    \label{fig:invariant-vs-variant-control}
+\end{figure}
+
+The advantages of \ac{DSP}-based digital control are based on programmability
+with \emph{Time-Variant} parameters – coming from memory
+\autocite{yazdani-digital-control}.
+
+Whereas we need much instrumentation in the analog case to modify
+loop parameters on the fly (multiplexers to select one out of many correction
+values) we have an infinite space of parameters in the digital domain,
+assuming that there are no memory constraints.
+
+In the era of \ac{FPGA} chips with \SI{}{\giga\hertz} clock rates and
+a-to-d or d-to-a converters with bandwidths of hundreds of \SI{}{\mega\hertz},
+we do not suffer from speed limitations.
+
+\autoref{fig:system-block-diagram-hvs} shows the block diagram of the new power
+source for \ac{ATE} \ac{DUT} applications:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item
+    All measurement signals are transferred to the digital domain.
+    We can transfer data from high potentials to ground level with perfect
+    data couplers.
+    Isolation barriers of many \SI{}{\kilo\volt} are no problem, and there is no
+    degradation of signal quality as we transfer digital signals only.
+    \begin{itemize}
+        \item
+        A pure analog solution has drawbacks: Isolation amplifiers have a
+        low bandwidth that lowers overall speed, and resistive dividers suffer
+        significantly from accuracy problems.
+    \end{itemize}
+
+    \item
+    All amplifier or switching stages in the signal-processing chain can be
+    directly handled by the loop controller.
+    Therefore, it is possible to
+    inject compensation signals into every stage to optimize the
+    output waveform shape.
+
+\end{itemize}
+
+\begin{figure}[p]
+    \centering
+    \printfitgraphics[0.80\textheight]{figures/dps_algorithms_psu/digital-feedback-structure}
+    \caption[System Overview of Time-Variant Control Loop]{
+        System overview of the proposed Time-Variant Control loop for the
+        improved \ac{DPS}, integrating both analog and digital components.
+        The analog domain includes the main, voltage, and current amplifiers
+        with local and global compensation to maintain stable and accurate
+        output.
+        The digital domain utilizes \ac{ADC} and \ac{DAC} for information
+        exchange between the two domains, an \ac{MCU} for
+        mode control and safety, and an FPGA for executing the control
+        algorithms.
+        The system is designed to manage set points, compensate for delays
+        and phase shifts to provide precise output for various types
+        of \acp{DUT}.
+    }
+    \label{fig:system-block-diagram-hvs}
+\end{figure}
+
+%\newpage
+The benefits of such an arrangement are:
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item
+    The feedback controller can apply predictive algorithms
+    \item
+    Range and load-dependent settings are part of the control logic (\ac{FPGA})
+    – we can store many parameter sets as required.
+    \item
+    Feedback parameters can be modified on the fly even during the settling
+    of the amplifiers.
+\end{itemize}
+

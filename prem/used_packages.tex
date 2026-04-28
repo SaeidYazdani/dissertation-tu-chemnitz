@@ -1,0 +1,463 @@
+\usepackage{textcomp}
+\usepackage{lipsum}
+\usepackage[ngerman,english]{babel}
+\usepackage{blindtext}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{comment}
+\usepackage{ragged2e} % Good for forcing alignements
+\usepackage{array}
+\usepackage{graphicx,color}
+\usepackage{pdfpages}
+\makeatletter
+\define@key{Gin}{artifact}[]{}
+\makeatother
+\usepackage{multirow}
+\usepackage[
+    a5paper,
+    twoside,
+    inner=27mm,
+    outer=18mm,
+    top=17mm,
+    bottom=17mm
+]{geometry}
+\usepackage{epsfig}
+\usepackage{setspace}
+\usepackage{latexsym}
+\usepackage{mathrsfs}
+\usepackage{tikz}
+\usepackage[titletoc]{appendix}
+\usepackage{alltt}
+\graphicspath{ {images/} }
+\usepackage{longtable}
+\usepackage{acronym}
+\usepackage{pgfplots, pgfplotstable}
+\usepackage{csquotes}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[hidelinks]{hyperref}
+\usepackage{algorithmicx}
+\usepackage{cleveref } % for nice ref stuff
+%\usepackage{tocloft}
+%\setcounter{tocdepth}{1}
+%\renewcommand{\cftdot}{}
+\usepackage{titletoc,tocloft}
+%\setlength{\cftsecindent}{2cm}
+\setlength{\cftsubsecindent}{1.2cm}
+\setlength{\cftsubsubsecindent}{1cm}
+%\dottedcontents{section}[1.5em]{}{1.3em}{.6em}
+%\usepgfplotslibrary{groupplots} % Not necessary
+
+\usepackage{times}
+% Line spacing - Distance between paragraph lines
+\renewcommand{\baselinestretch}{1.28}
+\emergencystretch=3em
+\doublehyphendemerits=100000
+\providecommand{\chapterfont}[1]{}
+\providecommand{\sectionfont}[1]{}
+\usepackage{titlesec}
+
+\setcounter{secnumdepth}{3}
+\chapterfont{\centering }
+\titleformat{\chapter}[display]
+{\normalfont%
+\fontsize{11pt}{13pt}\selectfont% %change this size to your needs for the first line
+\bfseries}{\chaptertitlename\ \thechapter}{14pt}{%
+    \fontsize{12pt}{14pt}\selectfont %change this size to your needs for the second line
+}
+%{\bf\centering }
+%{\chaptertitlename\ \thechapter }{14pt}{\large}
+
+\usepackage{textcase}
+%\allsectionsfont{\MakeTextUppercase}
+
+\sectionfont{\normalfont}
+\titleformat{\section}
+{\normalfont\bfseries\fontsize{10pt}{12pt}\selectfont}{\thesection}{0.8em}{}
+\titleformat{\subsection}
+{\normalfont\bfseries\fontsize{9pt}{11pt}\selectfont}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}
+{\normalfont\fontsize{8.5pt}{10.5pt}\selectfont}{\thesubsubsection}{0.8em}{}
+\titlespacing*{\chapter}{0pt}{0pt}{2ex plus .3ex}
+\titlespacing*{\section}{0pt}{2.4ex plus .3ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{2ex plus .2ex}{0.8ex plus .1ex}
+\titlespacing*{\subsubsection}{0pt}{1.6ex plus .2ex}{0.6ex plus .1ex}
+%\titlespacing*{\section} {0pt}{0pt}{2.3ex plus .2ex}
+%\titlespacing*{\subsection}{0pt}{0pt}{1.5ex plus .2ex}
+%%%% CAPTION SETUP AND FONT SIZE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\captionsetup[table]{labelsep=space, labelfont=bf, font=footnotesize, skip=4pt}
+% Available values are scriptsize, footnotesize, small, normalsize, large,
+% and Larger.
+%
+\captionsetup[figure]{labelsep=space, labelfont=bf, font=footnotesize, skip=4pt}
+
+\newcommand{\printfitgraphics}[2][0.62\textheight]{%
+    \includegraphics[width=\linewidth,height=#1,keepaspectratio]{#2}%
+}
+
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\renewcommand{\topfraction}{0.86}
+\renewcommand{\bottomfraction}{0.72}
+\renewcommand{\textfraction}{0.12}
+\renewcommand{\floatpagefraction}{0.68}
+
+\setcounter{page}{1}
+\newtheorem{definition}{Definition}
+\newcommand{\brdefinition}{\begin{definition}}
+\newcommand{\erdefinition}{\end{definition}}
+
+\newtheorem{corollary}{Corollary}
+\newcommand{\bcorollary}{\begin{corollary}}
+\newcommand{\ecorollary}{\end{corollary}}
+\newtheorem{example}{Example}
+\newcommand{\bexample}{\begin{example}}
+\newcommand{\eexample}{\end{example}}
+\newtheorem{remark}{Remark}
+\newcommand{\bremark}{\begin{remark}}
+\newcommand{\eremark}{\end{remark}}
+\newcommand{\bproof}{{\bf {Proof:}}}
+\newcommand{\eproof}{}
+\newcommand{\bsolution}{{\bf {Solution:}}}
+\newcommand{\esolution}{}
+\newtheorem{theorem}{Theorem}
+\newcommand{\btheorem}{\begin{theorem}}
+\newcommand{\etheorem}{\end{theorem}}
+\newtheorem{lemma}{Lemma}
+\newcommand{\blemma}{\begin{lemma}}
+\newcommand{\elemma}{\end{lemma}}
+\newcommand{\UD}{\ensuremath{\bigtriangleup}}
+\newcommand{\IC}{\ensuremath{\mathcal{C}} }
+%\renewcommand{\rm}{\normalshape}
+\newcommand{\ol}{\overline}
+
+%%%% Paragraph Settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\raggedbottom
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
+\def\cen{\centerline}
+\def\pnq{\par\noindent\quad}
+\def\pn{\par\noindent}
+% Space between paragrahs
+\usepackage[skip=6pt plus1pt minus1pt, indent=28pt]{parskip}
+
+\newcommand{\non}{\nonumber}
+\newcommand{\mC}{{\mathbb C}}
+\newcommand{\mN}{{\mathbb N}}
+\newcommand{\mU}{{\mathbb U}}
+\newcommand{\cA}{{\mathcal A}}
+\newcommand{\cR}{{\mathcal R}}
+\newcommand{\cS}{{\mathcal S}}
+\newcommand{\cT}{{\mathcal T}}
+\newcommand{\cUCV}{{\mathcal UCV}}
+\newcommand{\cST}{{\mathcal ST}}
+\newcommand{\cK}{{\mathcal K}}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\brdef}{\begin{defi}}
+\newcommand{\erdef}{\end{defi}}
+\newcommand{\bcor}{\begin{cor}}
+\newcommand{\ecor}{\end{cor}}
+\newcommand{\bth}{\begin{thm}}
+\newcommand{\ble}{\begin{lem}}
+\newcommand{\ele}{\end{lem}}
+\newcommand{\bcha}{\end{cha}}\pagestyle{plain}
+\renewcommand{\theequation}{\thechapter.\arabic{equation}}
+\renewcommand{\thetheorem}{\thesection.\arabic{theorem}}
+\renewcommand{\thecorollary}{\thesection.\arabic{corollary}}
+\renewcommand{\thelemma}{\thesection.\arabic{lemma}}
+\renewcommand{\thedefinition}{\thesection.\arabic{definition}}
+\renewcommand{\theexample}{\thesection.\arabic{example}}
+\renewcommand{\theremark}{\thesection.\arabic{remark}}
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+
+\renewcommand{\chaptername}{CHAPTER}
+\renewcommand{\figurename}{Fig.}
+
+\def\cen{\centerline}
+\def\pnq{\par\noindent\quad}
+\def\pn{\par\noindent}
+\def\sevenpoint{%
+    \def\rm{\sevenrm}%
+    \def\it{\sevenit}%
+    \def\bf{\sevenbf}%
+    \rm}
+%\pretoler
+\renewcommand{\theequation}{\thechapter.\arabic{equation}}
+\theoremstyle{definition}
+\renewcommand*{\proofname}{{\rm Proof}}
+% Chapter title format
+\usepackage{titlesec}
+\chapterfont{\centering }
+\titleformat{\chapter}[display]
+{\bf\centering}
+{\chaptertitlename\ \thechapter}{12pt}{\fontsize{12pt}{14pt}\selectfont}
+\sectionfont{\normalfont}
+%\renewcommand*\contentsname{\large \centerline{TABLE OF CONTENTS}}
+\renewcommand\cftchappresnum{} % prefix "Chapter " to chapter number in ToC
+\cftsetindents{chapter}{0em}{3em}      % set amount of indenting
+\cftsetindents{section}{0em}{3em}
+%For reference
+
+%\usepackage{natbib}
+%%\bibliographystyle{apalike}%\usepackage{apalike}
+%
+%\setlength{\bibhang}{0pt}
+%
+%%\setlength\bibindent{0em}
+%\renewcommand{\bibname}{REFERENCES}
+%\renewcommand{\bibname}{\protect\centerline{References}}
+
+%\newcommand{\setbibname}[1]{\bibname[#1]{\centering #1}}
+
+
+\renewcommand*\contentsname{Table of Contents}
+\renewcommand*\listfigurename{List of Figures}
+\renewcommand*\listtablename{List of Tables}
+\newcommand{\frontmatterlisttitle}[1]{%
+    \vspace*{\cftbeforelottitleskip}%
+    \noindent\makebox[\textwidth][l]{{\cftlottitlefont #1}}\par%
+    \vskip\cftafterlottitleskip}
+
+%For Terms and Abbreviations 
+%\usepackage[acronym,toc]{glossaries}
+\usepackage{glossaries}
+\makeglossary
+%\makeglossaries
+%\renewcommand*\glspostdescription{\cftdotfill{\cftsecdotsep}}
+%\renewcommand{\glossarysection}[2][]{{\centering\bfseries\MakeTextUppercase{#2}\par}}
+
+
+%\renewcommand*{\bibpagespunct}{\addcolon\space}
+
+\definecolor{butter1}{rgb}{0.988,0.914,0.310}
+\definecolor{chocolate1}{rgb}{0.914,0.725,0.431}
+\definecolor{chameleon1}{rgb}{0.541,0.886,0.204}
+\definecolor{skyblue1}{rgb}{0.447,0.624,0.812}
+\definecolor{plum1}{rgb}{0.678,0.498,0.659}
+\definecolor{scarletred1}{rgb}{0.937,0.161,0.161}
+
+
+%For Table Column Width
+%\usepackage{array} %% Already included above
+\newcolumntype{L}[1]
+{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]
+{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]
+{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\usepackage{etoolbox}
+
+\makeatletter
+\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
+\patchcmd{\ttlh@hang}{\noindent}{}{}{}
+\makeatother
+
+% For fonts
+\renewcommand{\familydefault}{\sfdefault}
+%\usepackage{bookman}
+%\usepackage{lmodern}
+%\usepackage[T1]{fontenc}
+
+%%%% Date and Time %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{datetime}
+\newdateformat{monthdayyeardate}{%
+    \THEDAY~\monthname[\THEMONTH]~\THEYEAR}
+
+%%%%% Bibliography %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{biblatex} %Imports biblatex package
+
+%\addbibresource{backmatter/mypubs.bib} %Import the bibliography file
+
+
+%%%% Environments %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% For defining symbols under equationns
+% https://tex.stackexchange.com/questions/95838
+\usepackage{calc, tabularx}
+\newenvironment{definesymbolsfrontmatter}[1][{~}]
+{\noindent#1 \small\begin{tabular}[t]{>{$}l<{$} @{${}\quad{}$} l}}
+{\end{tabular}\par}
+
+\newenvironment{definesymbols}[1][{\textbf{\scriptsize~Where:}}]
+{#1 \scriptsize\begin{tabular}[t]{>{$}l<{$} @{${}={}$} l}}
+{\end{tabular}\\}
+
+% For forcing a paraghraph to move to bottom of a page
+% https://tex.stackexchange.com/questions/31186
+\newenvironment{bottompar}{\par\vspace*{\fill}}{\clearpage}
+
+%%%% FIX FOOTNOTE SPLIT ACROSS PAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\interfootnotelinepenalty=10000
+
+%%%%% SI Units
+\usepackage{siunitx}
+\sisetup{per-mode = symbol}
+\DeclareSIUnit{\belmilliwatt}{Bm}
+\DeclareSIUnit{\dBm}{\deci\belmilliwatt}
+\DeclareSIUnit{\dB}{\deci\bel}
+\DeclareSIUnit{\ppm}{ppm}
+\DeclareSIUnit{\kbd}{kBd}
+
+
+%%%% DIFF Equations
+\usepackage{derivative}
+\usepackage{physics}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand*\Diff[1]{\mathop{}\!\mathrm{d^#1}}
+
+%\pdv{f}{x}, \quad \odv{Q}{t}=\odv{s}{t}, \quad \pdv{f}{x,y}, \quad
+%\derivset{\odv}[switch-*=false] \odv{y}{x}, \quad \odv[n]{y}{x}, \quad
+%\derivset{\odv}[misc-add-delims=fun] \odv*{\odv{y}{x}}{x}, \quad
+%\derivset{\pdv}[sort-method={sign,symbol,abs}] \pdv[c+kn,-b+2a]{f}{x,y}
+
+%%%% For graphs and flowcharts
+\usepackage{pgf-pie}
+\usetikzlibrary{shadows, shapes.geometric, arrows}
+\pgfplotsset{compat=1.18} % use package is declared in the top of this file
+\newlength{\TL}  % Tick Label
+
+
+% Define styles for nodes
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=red!30, font=\scriptsize]
+\tikzstyle{io} = [
+trapezium,
+trapezium stretches=true, % A later addition
+trapezium left angle=70,
+trapezium right angle=110,
+, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=red!30, font=\scriptsize]
+\tikzstyle{process} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=orange!30, font=\scriptsize]
+\tikzstyle{decision} = [diamond, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=green!30, aspect=2, font=\scriptsize]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+%%%%% For tables
+%\usepackage[utf8]{inputenc}
+%\usepackage{fourier}
+\usepackage{makecell}
+%\renewcommand\theadalign{bc}
+%\renewcommand\theadfont{\bfseries}
+%\renewcommand\theadgape{\Gape[4pt]}
+%\renewcommand\cellgape{\Gape[4pt]}
+%\newcommand{\specialcell}[2][c]{%
+%\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+% For centering columns in a table
+% Taken from
+% https://tex.stackexchange.com/questions/157389
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+% Afterpage package to allow joinging things
+% https://tex.stackexchange.com/questions/65606/
+\usepackage{afterpage}
+
+
+% Allows for adjusting line spacing and etc.
+% https://stackoverflow.com/questions/38144458
+\usepackage{enumitem}
+% used like this:
+% \begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+
+% For itemize pro/con lists
+% https://tex.stackexchange.com/questions/145198
+\newcommand\itempro{\item[$+$]}
+\newcommand\itemcon{\item[$-$]}
+
+
+%% For table with color
+%% !!! THIS CAUSED OPTION CLASH!!!
+%\usepackage[table]{xcolor}
+
+
+% For floatbarrier
+\usepackage{placeins}
+
+
+% FOR CODE LISTINGS
+
+\usepackage{listings}
+
+\lstdefinestyle{commonstyle}{
+keywordstyle=[1]\bfseries,
+commentstyle=\itshape,
+stringstyle=\ttfamily,
+basicstyle=\ttfamily\scriptsize,
+numbers=left,
+numberstyle=\tiny,
+stepnumber=1,
+numbersep=5pt,
+tabsize=2,
+showspaces=false,
+showstringspaces=false,
+breaklines=true,
+breakatwhitespace=true,
+escapechar=@
+}
+
+% Define VHDL language settings
+\lstdefinelanguage{VHDL}{
+morekeywords=[1]{architecture,begin,end,entity,is,port,in,out,of,use,library,IEEE,std_logic_vector,std_logic,signal,if,else,case,when,others,process,and,or,not},
+sensitive=false,
+morecomment=[l]--,
+morecomment=[s]{/*}{*/},
+morestring=[b]",
+morestring=[b]',
+keywordstyle=[1]\bfseries,
+commentstyle=\itshape,
+stringstyle=\ttfamily,
+basicstyle=\ttfamily\scriptsize,
+numbers=left,
+numberstyle=\tiny,
+stepnumber=1,
+numbersep=5pt,
+tabsize=2,
+showspaces=false,
+showstringspaces=false,
+breaklines=true,
+breakatwhitespace=true
+}
+
+% Set common settings
+\lstset{
+frame=single,% adds a frame around the code
+frameround=tttt, % rounded corners
+captionpos=t, % sets the caption-position to bottom
+keepspaces=true, % keeps spaces in text, useful for keeping indentation of code
+aboveskip=4pt,  % Space above each line
+belowskip=1pt,  % Space below each line
+lineskip=-1pt   % Further reduce spacing between lines
+}
+
+
+
+%%%%
+%%%%%
+% for combining two figures into one but keeping captions separat
+
+% for empty pages
+% https://tex.stackexchange.com/questions/36880/insert-a-blank-page-after-current-page
+
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \newpage}
+
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+    \clearpage
+    \if@twoside
+        \ifodd\c@page
+        \else
+            \hbox{}%
+            \thispagestyle{empty}%
+            \newpage
+        \fi
+    \fi}
+\makeatother

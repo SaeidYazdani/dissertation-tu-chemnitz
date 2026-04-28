@@ -1,0 +1,65 @@
+%! Author = Saeid Yazdani
+%! Date = 1/8/2024
+
+
+\section{Will Built-In Test Render \acp{ATE} Obsolete?}
+\label{sec:bist-vs-ate}
+
+In the \autoref{subsec:dfx-dft}, some of the significant testing trends
+in the industry were presented.
+It was established that built-in test facilities such as scan chains and
+\ac{BIST} are commonly used methods for reducing test time and effort.
+On the other hand, built-in structures including derivatives and similar
+concepts, by no means are supposed or made it possible \emph{yet} to
+remove \acp{ATE} from
+the \emph{semiconductor ecosystem} (\autoref{fig:semiconductor-ecosystem}).
+
+\acp{ATE} are still mandatory for powering up and applying test sequences
+(either directly or by activating scan chains or \ac{BIST} cores
+on the \ac{DUT}) and log and verify the results.
+
+In addition, \ac{ATE} based tests are still carried out at wafer
+and package levels to obtain pass/fail results (i.e. whether or not the chip is
+functional), and performance-class binning of the chips for different maximum
+clock speeds, which is a common practice in
+consumer-grade products like \ac{CPU} and  \ac{GPU} chips.
+
+\subsection{Parametric tests and Influence on ATE-DUT Power Supplies}
+
+Although \ac{BIST} (\autoref{subsec:bist}) has improved
+over time,
+performing parametric tests is an area where traditional \acp{ATE} are still
+dominating as most of the tests are inherently analog and
+require precision measurement capabilities. Such tests include:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+
+    \item \textbf{\emph{Voltage and Current Measurements}:}
+    Stimulating and measuring the response of the \ac{DUT} for known effects
+    such as leakage currents, saturation voltages, driver capabilities, and
+    voltage thresholds.
+
+    \item \textbf{\emph{Power Consumption}:}
+    Bring the \ac{DUT} into known states and measure power
+    consumption (static and dynamic power), and check if the
+    power consumption is within predefined limits.
+
+    \item \textbf{\emph{Environmental tests}:}
+    \acp{ATE} with thermal modules bring
+    \ac{DUT} to high or low temperatures and perform tests for simulating
+    harsh application environments.
+
+    \item \textbf{\emph{Analog parameters}:}
+    \acp{ATE} can measure gain, bandwidth, \ac{SNR}, harmonic distortions,
+    and etc.
+
+    \item \textbf{\emph{\ac{RF} Evaluation}:}
+    For \ac{RF} mixed-signal and \ac{SoC} devices and transceivers,
+    measurements of parameters such as frequency response and
+    modulation characteristics are vital.
+\end{itemize}
+
+Many parametric tests can be performed relatively quickly and with standard accuracy. 
+However, measurements involving high-resolution \ac{ADC}s/\ac{DAC}s or very small currents 
+and voltages often require specialized precision equipment and longer test times, which can 
+limit the cost-effectiveness of conventional \acp{ATE}.

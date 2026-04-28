@@ -1,0 +1,139 @@
+%! Author = Saeid Yazdani
+%! Date = 5/14/2023
+
+
+\chapter{Towards Safe and Reliable Electronic Systems}
+\label{ch:towards-safe-reliable-systems}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introduction}
+\label{sec:ch1-introduction}
+
+\subsection{The Intent}
+\label{subsec:theintent}
+
+Power requirements of modern electronic components and integrated circuits are
+becoming more sophisticated with each new generation, thus pushing conventional
+\acp{ATE} beyond their design limits.
+
+Fast programmable power supplies are essential instruments for powering \acp{DUT}
+and apply test patterns.
+Therefore, test- and measurement-grade power supplies for qualification and
+reliability testing of electronic components must deliver precise test waveforms
+to devices under test to solve given test requirements.
+
+This work is dedicated to investigations on \ac{ATE}
+environments to identify limiting factors and bottlenecks.
+Based on the findings, a proposal for power supply design and optimization of
+control loop schemes in ATE \acp{SMU} by implementing a modern digital-oriented
+control loop is made.
+As a result, a prototype single-channel \ac{SMU} was developed as a test vehicle
+for the proposed control loop schemes.
+
+The research phase analyzes trends in the reliability of discrete electronic
+components, semiconductors, and electronic systems and their relationship to
+test and verification equipment to determine shortcomings and bottlenecks.
+The implementation phase focuses on real-world solutions to improve test systems
+and reduce limitations in the current generation of \acp{ATE}.
+
+An \ac{ATE} offers an array of \acp{SMU} or \acp{DPS} (called channels),
+operated and synchronized from a central supervising processor unit and
+software.
+Therefore, the proposed concept can be applied to larger and more
+complex \acp{ATE}.
+
+\subsection{The Importance of Testing}
+\label{subsec:importance-testing}
+
+The \ac{IEC} standard 1508~\autocite{SIL1508} defines a range that corresponds
+to the safety-criticality of systems, as shown in \autoref{tab:sil-targets}.
+According to these defined levels, a computer board designed to monitor and
+regulate oxygen levels in a submarine will be at \textit{Level 4}.
+In contrast, \textit{Level 1} represents systems where a failure is less likely
+to result in a fatal incident, such as a temperature control system of a
+household-grade fridge.
+
+\begin{table}[h] % [h1] Causes the table be positioned within the text
+    \resizebox{\textwidth}{!}{% Limit table size to text with by reducing font
+        \centering
+        \begin{tabular}{M{20mm}|P{50mm}|P{50mm}}
+
+            \toprule
+
+            \textbf{Level} &
+            ~~~\textbf{Demand Mode}\newline \small{Probability of failure to perform its design function on demand} &
+            ~~\textbf{Continuous Mode}\newline \small{Probability of a dangerous failure per year} \\
+
+            \midrule
+
+            % Row for level 4
+            \textbf{4} &
+            $>={10^{-5}}$ to $<{10^{-4}}$ &
+            $>={10^{-5}}$ to $<{10^{-4}}$ \\
+            \midrule
+
+            % Row for level 3
+            \textbf{3} &
+            $>={10^{-4}}$ to $<{10^{-3}}$ &
+            $>={10^{-4}}$ to $<{10^{-3}}$ \\
+
+            \midrule
+
+            % Row for level 2
+            \textbf{2} &
+            $>={10^{-3}}$ to $<{10^{-2}}$ &
+            $>={10^{-3}}$ to $<{10^{-2}}$ \\
+
+            \midrule
+
+            % Row for level 1
+            \textbf{1} &
+            $>={10^{-2}}$ to $<{10^{-1}}$ &
+            $>={10^{-2}}$ to $<{10^{-1}}$ % This was the last row
+
+        \end{tabular}
+    }% End resize to box
+    \caption[\ac{SIL}]{\ac{SIL} Target failure measures introduced in
+    IEC 1508 standard~\autocite{SIL1508}}
+    \label{tab:sil-targets}
+\end{table}
+
+A system usually does not fail as a whole.
+The failure starts within a building block of the system, and the failure in the
+building block traces back to one or more discrete or integrated components.
+
+Zooming into safety-critical systems at component level, the issue will become
+more intriguing.
+For example, if a device enters a latch-up state in an autopilot computer of an
+airplane, this would lead to a fatal crash if no redundancy were available.
+
+A list of what could go wrong with each passive and active component is long and
+never complete.
+The only way to ensure error-free components in a building block is to test
+every component with proper test patterns using precise test equipment.
+
+This stresses the importance of testing and qualification of components:
+Excellent \acp{PSU} must be installed at the core of the test equipment, which
+is vital for correctly evaluating the failure rate of components.
+
+\input{chapter_one/history-elec-failures/content}
+
+\input{chapter_one/design-and-test-challenges/content}
+
+\input{chapter_one/reli_safe_and_secu/content}
+
+\input{chapter_one/product_lifecycle/content}
+
+\input{chapter_one/work_outline/content}
+
+%\input{chapter_one/test_equipment_role_in_industry/content}
+
+%\input{chapter_one/review_control_theory/content}
+
+%\input{chapter_one/control-loop-in-psu/content}
+
+%\input{chapter_one/compare-analog-digital-loops/content}
+
+%\input{chapter_one/psu_performance_limiting_factors/content}

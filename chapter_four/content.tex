@@ -1,0 +1,45 @@
+%! Author = Saeid Yazdani
+%! Date = 4/22/2024
+
+
+\chapter{The \emph{Virtual} \acs{DUT}}
+\label{ch:the-vdut}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introduction}
+\label{sec:ch-vdut-introduction}
+
+As established in \autoref{ch:casestudy-from-ate-to-dut}, power supply and
+signal integrity in an \ac{ATE} environment depends on multiple
+quality factors:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item Power supply (control loop speed, compensation, etc.)
+    \item Interconnects between \ac{ATE} and \ac{DUT}
+    \item Load board and test socket
+    \item Internal layout and structure of \ac{DUT} (chip design)
+    \item Test program (timing, start-up sequence, etc.)
+\end{itemize}
+
+Verifying behaviour of an \ac{ATE} system as a whole proves to be
+challenging, as it is not trivial to measure exactly what is being received
+on \ac{DUT} pins just by probing other points that may ignore the properties
+of downstream or upstream in the \ac{ATE} to \ac{DUT} path.
+
+One solution is to use a special \ac{DUT} that sits inside
+the socket and stimulates the total setup and captures the behavior of
+the \ac{ATE} setup with \emph{control} and waveform \emph{capture} capabilities.
+
+Such a solution needs to be similar to the \ac{DUT} in terms of electrical
+properties and physical appearance as well as matching the \ac{DUT} in
+footprint and dimensions.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{chapter_four/vdut}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{chapter_four/vdut_prototype}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,350 @@
+%! Author = Saeid Yazdani
+%! Date = 3/17/2024
+
+
+\section{\acs{DPS} Measurements}
+\label{sec:dps-measurements}
+
+To identify the behavior of \ac{DPS} modules, a series of measurements were
+taken with and without inserted \acp{DUT} in the socket.
+The tester was programmed to inject known voltage levels into the load board and
+the resulting signals were monitored by an oscilloscope on the test points
+provided on the load board as shown in
+\autoref{fig:villach-supply-analysis-probe-points}.
+
+\begin{figure}
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/probe_points}
+    \caption[Probe Points on the Load board]{
+        The measurements were taken at probe (test) points on the
+        load board near the \acs{DUT} site.
+    }
+    \label{fig:villach-supply-analysis-probe-points}
+\end{figure}
+
+\subsection{\SI{1.3}{\volt} Core Voltage Bare-Board Tests}
+\label{subsec:onsite-measurements-no-dut-1v3}
+
+Bare-board tests unveiled irregular waveform shapes during supply
+settling in the form of spikes after \emph{TEST START} and
+\emph{TEST STOP} commands.
+\autoref{fig:villach-supply-analysis-1v3-test-start-glitch} shows that
+the \ac{ATE} under investigation exhibits voltage glitches shortly after
+the issue of \emph{TEST START} on the \SI{1.3}{\volt} rail.
+
+According to this measurement, the \ac{DPS} voltage
+is drawn to \SI{0}{\volt} (ground) and recovers after an overshoot
+peaking at nearly \SI{2}{\volt}, which is the limit set in the test procedure.
+Although the glitch is occurring at a timespan of approximately
+\SI{50}{\micro\second}, it may be long enough to disturb the test flow,
+one reason behind unexpected reset events during the test procedure.
+
+\begin{figure}[t]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/1v3_start_glitch.jpg}
+    \caption[\SI{1.3}{\volt} Rail glitch at \emph{TEST START}
+    without \acs{DUT}]{
+        \ac{DPS} Waveform shows glitches occurring at
+        \SI{1.8}{\milli\second} after \emph{TEST START} on \SI{1.3}{\volt} rail.
+    }
+    \label{fig:villach-supply-analysis-1v3-test-start-glitch}
+\end{figure}
+
+For the \emph{TEST STOP} sequence, a large overshoot to \SI{6}{\volt} for a
+duration of \SI{20}{\milli\second} was observed as shown in
+\autoref{fig:villach-supply-analysis-1v3-test-stop-overshoot}.
+Further investigations revealed that there is a high-voltage current source
+discharging its stored energy into the load board after the \emph{TEST STOP}
+command.
+The following points can be assumed regarding the observed overshoot:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+
+    \item The larger the on-board supply capacitance, the slower the voltage
+    rise.
+
+    \item Very large capacitors would reduce the over-voltage to harmless values.
+
+    \item There is no dependency on any switch-off delay, the overshoot waveform
+    depends solely on the event \emph{TEST STOP}.
+
+    \item It is assumed that there is an unwanted shoot-through path from the
+    power supply rails to the DPS output pin for a short time.
+    Note that some internal switches short the output to ground after
+    \SI{20}{\milli\second}
+    (\autoref{fig:villach-supply-analysis-1v3-test-stop-overshoot}).
+
+\end{itemize}
+
+\begin{figure}[t]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/1v3_test-stop_overshoot_6v0.jpg}
+    \caption[\SI{1.3}{\volt} Rail overshoot at \emph{TEST STOP}  without
+    \acs{DUT}]{
+        \ac{DPS} Waveform shows a comparatively high voltage overshoot when
+        issuing a \emph{TEST STOP} command on \SI{1.3}{\volt} rail.
+    }
+    \label{fig:villach-supply-analysis-1v3-test-stop-overshoot}
+\end{figure}
+
+\subsection{\SI{3.3}{\volt} \acs{I/O} Bare-Board Tests}
+\label{subsec:onsite-measurements-no-dut-3v3}
+
+Performing the same measurements on the \SI{3.3}{\volt} did not reveal any of
+the glitches and overshoots observed on the \SI{1.3}{\volt} rail.
+The supply rails were clean on both \emph{TEST START} and \emph{TEST STOP}
+commands.
+This supply shows excellent behavior in its waveform shape and settling speed
+as shown in \autoref{fig:villach-supply-analysis-3v3-test-start}.
+A minor misbehavior resembles the large over-voltage after \emph{TEST STOP}
+but the amplitude of the delayed distortion is very low as captured in
+\autoref{fig:villach-supply-analysis-3v3-test-stop} and does not disturb an
+actual functional test.
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/3v3_start_zoomed_in.jpg}
+    \caption[\SI{3.3}{\volt} Rail zoomed-in at \emph{TEST START}
+    without \acs{DUT}]{
+        \ac{DPS} Waveform shows a clean \SI{3.3}{\volt} signal with a good
+        ramp-up and settling time.
+    }
+    \label{fig:villach-supply-analysis-3v3-test-start}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/3v3_test_stop.jpg}
+    \caption[\SI{3.3}{\volt} Rail at \emph{TEST STOP}
+    without \acs{DUT}]{
+        \ac{DPS} Waveform shows the \emph{TEST STOP} on the \SI{3.3}{\volt}
+        exhibiting no overshoot in comparison to the \SI{1.3}{\volt} rail.
+    }
+    \label{fig:villach-supply-analysis-3v3-test-stop}
+\end{figure}
+
+\subsection{\SI{5}{\volt} Mixed-Signal Bare-Board Tests}
+\label{subsec:onsite-measurements-no-dut-5v0}
+
+Measurements on the \SI{5}{\volt} supply rails revealed a similar
+issue to the \SI{1.3}{\volt} rail during the \emph{TEST STOP} sequence with a
+large voltage swing of \SI{5.5}{\volt} appearing at the end of the
+test, after approximately \SI{10}{\milli\second}, as shown
+in \autoref{fig:villach-supply-analysis-5v0-test-stop}.
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/5v0_stop_overshoot.jpg}
+    \caption[\SI{5}{\volt} Rail at \emph{TEST STOP}
+    without \acs{DUT}]{
+        \ac{DPS} Waveform shows the \emph{TEST STOP} ont the \SI{5}{\volt}
+        rail exhibits the same voltage swing behavior as seen in the
+        \SI{1.3}{\volt} rail test.
+    }
+    \label{fig:villach-supply-analysis-5v0-test-stop}
+\end{figure}
+
+This observation leads to the assumption that there are unwanted switching
+events happening on the load board itself, as there are multiple relays
+and \ac{FET} switches that may interact with the \ac{DPS} modules due to
+improper cross-connections during switch-on and switch-off events occurring on
+the load board.
+
+\subsection{\SI{1.3}{\volt} Core Voltage with \acs{DUT} Tests}
+\label{subsec:onsite-meas
+urements-with-dut-1v3}
+
+Even with a \ac{DUT} inserted in the test socket, the \ac{DPS} shows the exact
+same glitching behaviour in \SI{1.8}{\milli\second} after \emph{TEST START} as
+shown in \autoref{fig:villach-supply-analysis-1v3-test-start-with-dut}.
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/1v3_test_with_dut_glitched.jpg}
+    \caption[\SI{1.3}{\volt} Rail at \emph{TEST START} with \acs{DUT}]{
+        With a \ac{DUT} inserted, the \ac{DPS} module exhibits a similar
+        behavior compared to the test without \ac{DUT}.
+    }
+    \label{fig:villach-supply-analysis-1v3-test-start-with-dut}
+\end{figure}
+
+\subsection{\SI{3.3}{\volt} \acs{I/O} with \acs{DUT} Tests}
+\label{subsec:onsite-measurements-with-dut-3v3}
+
+\autoref{fig:villach-supply-analysis-3v3-test-start-with-dut} shows
+the near-perfect waveform shape for the {\SI{3.3}{\volt}} supply.
+Similar to the test without any \ac{DUT} inserted, the small extra voltage
+ramp-up after \SI{10}{\milli\second} should not disturb test results.
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/3v3_test_with_dut.jpg}
+    \caption[\SI{1.3}{\volt} Rail at \emph{TEST START} with \acs{DUT}]{
+        \ac{DPS} Waveform on the \SI{3.3}{\volt} shows no major flaws after
+        issuing \emph{TEST STOP}.
+        Only a minor voltage rise can be seen.
+    }
+    \label{fig:villach-supply-analysis-3v3-test-start-with-dut}
+\end{figure}
+
+\subsection{\SI{5}{\volt} Mixed-Signal with \acs{DUT} Tests}
+\label{subsec:onsite-measurements-with-dut-5v0}
+
+With a \ac{DUT} inserted, the \SI{5}{\volt} shows a different behaviour compared
+to the same test without a \acs{DUT}.
+The ramp-up and decay glitch after \SI{10}{\milli\second} of issuing the
+\emph{TEST STOP} command is still occurring, but with a much lower amplitude.
+The maximum glitch voltage is \SI{1.5}{\volt} compared to the \SI{5.5}{\volt}
+when there is no load inserted, as shown in
+\autoref{fig:villach-supply-analysis-5v0-test-start-with-dut}.
+
+The fact that the ramp-up has a lower magnitude when there is a load inserted
+reinforces the assumption that there is a charge injection from the \ac{DPS}
+internal source: The more load is connected, the lower the error voltage level.
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/5v0_with_dut.jpg}
+    \caption[\SI{5}{\volt} Rail at \emph{TEST STOP} with \acs{DUT}]{
+        \ac{DPS} Waveform of the \SI{5}{\volt} rail with \ac{DUT} inserted.
+        The addition of the load has decreased the \emph{TEST STOP} ramp-up from
+        \SI{5.7}{\volt} to \SI{1.5}{\volt}
+    }
+    \label{fig:villach-supply-analysis-5v0-test-start-with-dut}
+\end{figure}
+
+\subsection{Measurements with \acs{DUT} and \SI{10}{\micro\farad}
+Bypass Capacitor}
+\label{subsec:onsite-measurements-added-10uc-capacitance}
+
+The tests on \SI{1.3}{\volt}, \SI{3.3}{\volt} and \SI{5}{\volt} rails were
+repeated after insertion of a \SI{10}{\micro\farad} bypass capacitor near
+the \ac{DUT} site.
+The introduction of extra bypass capacitance immediately changed the shape of
+\emph{TEST START} glitches and \emph{TEST STOP} ramp-up and decay.
+
+In comparison with the same waveform without a bypass capacitor,
+as shown
+in \autoref{fig:villach-supply-analysis-1v3-test-start-with-dut-10uCap}, the
+frequency of the glitching is lower and the undershoot of the glitch
+voltage level is drastically reduced and it does not reach \SI{0}{\volt}
+anymore, although the overshoot of the glitch remains the same.
+It should be noted that the improvement on the glitch comes with the cost of
+a very slight overshoot and undershoot at the rising edge of the rail voltage
+and increased rise-time.
+
+% FINDING
+We may deduct from these findings that the control loop of the
+\ac{DPS} used for the \SI{1.3}{\volt}  rail exhibits
+shortcomings when dealing with capacitive loads.
+
+For the \SI{3.3}{\volt}, the extra capacitance did not show any contribution as
+this voltage rail operates flawlessly in all configurations (with and without
+combinations of bypass capacitor and \ac{DUT} inserted).
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/1v3_start_gltich_load_and_10uCap.jpg}
+    \caption[\SI{1.3}{\volt} Rail at \emph{TEST START} with \acs{DUT} and
+    \SI{10}{\micro\farad} capacitor]{
+        \SI{1.3}{\volt} rail at \emph{TEST START} with \acs{DUT} and
+        \SI{10}{\micro\farad} bypass capacitor.
+        The frequency and magnitude of the
+        glitch is drastically reduced by the insertion of a bypass capacitor
+        with the cost of slight overshoot and undershoot before settling and
+        reduced rise time.
+    }
+    \label{fig:villach-supply-analysis-1v3-test-start-with-dut-10uCap}
+\end{figure}
+
+The \SI{5}{\volt} rail exhibited a leading-edge overshoot
+to almost \SI{6.7}{\volt} followed by a small undershoot at the
+\emph{START TEST} command before settling down to \SI{5}{\volt} indicating
+a control loop related issue when dealing with capacitive loads,
+as shown in \autoref{fig:villach-supply-analysis-5v0-dut-10uc} and zoomed-in
+for detailed view of the overshoot and settling time in
+\autoref{fig:villach-supply-analysis-5v0-dut-10uc-zoom}.
+The addition of the capacitor did affect the ramp-up voltage after issuing
+\emph{TEST STOP} command.
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/5v0_test-start_overshoot_zoomout_dut-10uc.jpg}
+    \caption[\SI{5.0}{\volt} Rail at \emph{TEST START} with \acs{DUT} and
+    \SI{10}{\micro\farad} capacitor]{
+        \SI{5}{\volt} rail with \acs{DUT} and
+        \SI{10}{\micro\farad} bypass capacitor inserted.
+        A spike to \SI{6.7}{\volt} is observed before settling down at
+        \SI{5}{\volt}.
+
+    }
+    \label{fig:villach-supply-analysis-5v0-dut-10uc}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/5v0_start_dut_10uC.jpg}
+    \caption[Detailed view of \SI{5.0}{\volt} rail at \emph{TEST START}]{
+        Zooming in the \SI{5}{\volt} rail with \acs{DUT} and
+        \SI{10}{\micro\farad} bypass capacitor inserted.
+        The overshoot and undershoot before settling at the target voltage are
+        visible at this time scale.
+    }
+    \label{fig:villach-supply-analysis-5v0-dut-10uc-zoom}
+\end{figure}
+
+The captured result of the  \SI{5}{\volt} with \ac{DUT} and bypass capacitor
+verifies that the extra ramp-up voltage after issuing a \emph{TEST STOP} command
+is indeed a charge injection phenomenon, indicating that the \ac{DPS} is unfit
+for capacitive loads.
+
+\subsection{Measurements with \acs{DUT} and \SI{20}{\micro\farad}
+Bypass Capacitor}
+\label{subsec:onsite-measurements-added-20uc-capacitance}
+
+To confirm the weakness of \ac{DPS} units for capacitive loads, a
+\SI{20}{\micro\farad} bypass capacitor was used and the measurements were
+repeated.
+The reaction of \SI{1.3}{\volt} at \emph{TEST START} rail remained overall the
+same in comparison with \SI{10}{\micro\farad} capacitor and only the
+overshoot and undershoot of the leading edge increased slightly before finally
+settling down.
+
+On the other hand, the \emph{TEST STOP} command exhibited a massive
+spike of \SI{5.4}{\volt} that took \SI{20}{\milli\second} to disappear.
+Since the time base of this measurement was set to
+\SI{50}{\milli\second}, a second ramp-up and decay was observed as well.
+This is shown in \autoref{fig:villach-supply-analysis-1v3-dut-20uc-stop}.
+
+The \SI{3.3}{\volt} rail which did not exhibit any
+glitch, overshoot, or undershoot in the previous measurement cases, showed an
+overshoot at the \emph{TEST START} command with an amplitude of \SI{4.2}{\volt}
+and slightly longer rise time,
+as shown in \autoref{fig:villach-supply-analysis-3v3-dut-20uc-zoom}.
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/1v3_dut_20uf_50ms.jpg}
+    \caption[\SI{1.3}{\volt} Rail at \emph{TEST STOP} with \acs{DUT}
+    and \SI{20}{\micro\farad} capacitor]{
+        The \SI{3.3}{\volt} rail with \acs{DUT} and
+        \SI{20}{\micro\farad} bypass capacitor inserted.
+        An extreme ramp-up to \SI{5.4}{\volt} and
+        a following ramp-up is observed.
+    }
+    \label{fig:villach-supply-analysis-1v3-dut-20uc-stop}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \printfitgraphics[0.58\textheight]{figures/villach-supply-analysis/scope/3v3_start_dut_20uf.jpg}
+    \caption[\SI{3.3}{\volt} Rail at \emph{TEST START} with \acs{DUT}
+    and \SI{20}{\micro\farad} capacitor]{
+        Zooming in the \SI{3.3}{\volt} rail with \acs{DUT} and
+        \SI{20}{\micro\farad} bypass capacitor inserted.
+        An overshoot up to \SI{4.2}{\volt} and
+        slightly slower rise-time is observed.
+    }
+    \label{fig:villach-supply-analysis-3v3-dut-20uc-zoom}
+\end{figure}
+

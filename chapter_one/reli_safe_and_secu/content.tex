@@ -1,0 +1,100 @@
+%! Author = Saeid Yazdani
+%! Date = 11/19/2023
+
+
+\section{Reliability, Safety, and Security}
+\label{sec:reliability-safety-security}
+
+The definition of reliability is context-dependent.
+In the context of electronics, a system can be considered reliable if it
+satisfies its planned operation over the requested period of time.
+Intended operation is based on the knowledge of the mission profile: Only if all
+environmental conditions are well-defined can we expect proper behavior and a
+long lifetime.
+
+The mission profile describes the intended operational parameters, such as
+load force and maximum stress for any given period.
+We cannot expect the system to be reliable if the mission profile is roughly
+misinterpreted.
+We could counteract this by designing a safety-critical system and integrated
+stress monitors that detect critical anomalies.
+There are areas where we experience unwanted influence on a system:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+
+    \item \textbf{\emph{Component Production:}} Every system is made from
+    components, and any of those components may be the weakest part of a chain.
+    Every component must undergo a qualification process to determine lifetime
+    and breakdown risk.
+    No single component without such a certificate should be used
+    in quality designs.
+
+    \item \textbf{\emph{Substrate/Carrier Production:}}
+    Components are assembled on a substrate (\ac{PCB} or \ac{IC}).
+    Substrates may suffer from hard-to-find failure effects (cf. delamination,
+    blistering, surface contamination, via problems, etc.),
+    and even high-end production processes cannot guarantee error-free products.
+    Extended \ac{PCB} qualification is necessary to produce high-quality
+    assemblies (nuclear power, automotive and airborne industries have
+    stringent qualification rules and procedures).
+    %
+    \item \textbf{\emph{System Assembly:}} A system is made from many boards,
+    connectors, and wire harnesses.
+    Each element may introduce an additional risk of failure.
+    %
+    \item \textbf{\emph{System Operation:}}
+    Insufficient cooling methods cause thermal stress on components as
+    systems may run at elevated temperatures for an extended amount of time
+    because the designers are not skilled enough.
+    Thermal overstress during normal life is still a problem.
+    We can prevent over-voltage damage from lightning, supply surges, or
+    \ac{ESD} by proper design actions (surge limiters).
+    Over-current due to a short somewhere in the wiring, shoot-through, or the
+    like is much harder to prevent, and fuses may not be effective if the
+    over-current is only slightly above nominal values (in the case of extended
+    slight over-current we will heat the fuse carriers such that they lose their
+    function). Even if the system is designed to withstand stress factors,
+    reduction of total lifetime because of degradation that accumulates
+    over time is still a possibility.
+\end{itemize}
+
+When we design system protection mechanisms, we cannot consider all possible
+failure causes if they happen simultaneously.
+Instead, we use the divide-and-conquer strategy, and we should start with
+a single-fault approach where we expect only one failure at a time.
+
+For safety-critical systems, we must identify all inter-dependent
+failure causes or \ac{CCF}, which is a single failure event that
+causes multiple components to fail \autocite{Belland}.
+Particular care is necessary to cope with such conditions, and if the safety
+level of the application raises the assumption that the failure of a single
+component would likely cause total system failure, redundancy would be the
+last resort to maintain system availability and safety by limiting the influence
+of a single component failure to induce a destructive event \autocite{NUREG}.
+
+If there is a hidden common-cause effect that was not known during the design
+stage, we run into a system crash without prior notice.
+Such situations may arise if we do not have complete insight into all component
+parameters.
+Mechanical and passive components are commonly not described in full detail
+(e.g., missing datasheet parameters).
+Such components, therefore, adversely affect system reliability and need to be
+studied thoroughly before being added to the \ac{BOM}.
+Therefore, it is vital to quantify the probability of component failure
+over time and develop the means to pinpoint risky parts of a system.
+Having identified risky partitions, we may introduce merely adequate monitoring
+to get early warnings in case of near-fatal failures of the partition.
+
+One approach to keep a system alive is to replace a defective partition
+on-the-fly, i.e. conveying \ac{MTTR} close to zero.
+On-the-fly repair procedure requires proper tools and repair kits at hand at the time
+of failure, and the system will become larger in size, complexity, and number
+of components.
+Therefore, we keep such methods at a minimum.
+
+Another substantial factor for system availability is to monitor and detect
+early warnings on forthcoming wear-out failures, known as predictive maintenance
+so that we replace critical system slices in time. Instead of changing the system
+blocks on a fixed timeline (i.e. preventive maintenance), we use hardware to
+its near-end operational life, thus reducing downtime and repair or replacement
+costs \autocite{womack}.
