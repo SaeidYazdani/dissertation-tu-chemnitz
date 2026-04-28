@@ -179,6 +179,19 @@ make.cmd --jobs 8
 - If the build fails because a command is missing, confirm that the LaTeX
   distribution's binary directory is on `PATH`.
 
+## Special Thanks
+
+This project also depends on tools and community work that made the thesis
+practical to write and illustrate:
+
+- The Inkscape authors and contributors. Inkscape was used extensively to create
+  circuit schematics and figures.
+- The creator of the
+  [Inkscape electric symbols](https://github.com/upb-lea/Inkscape_electric_Symbols)
+  library, which provided useful electrical symbols for Inkscape drawings.
+- The creators and maintainers of LaTeX and the many LaTeX packages used in
+  this project.
+
 ## License
 
 See `LICENSE`.
