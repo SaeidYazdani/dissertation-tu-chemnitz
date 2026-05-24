@@ -1,0 +1,131 @@
+%! Author = Saeid Yazdani
+%! Date = 12/3/2023
+
+
+\section{The Mixed-Signal Era}
+\label{sec:mixed-signal-era}
+
+The invention of the transistor in 1947 and the Integrated Circuit in 1958
+established a path for complex chip designs.
+In the beginning, analog and digital circuits were developed separately, with
+analog solutions being dominant in almost all electronic systems.
+
+In the 1990s, the semiconductor industry made a tremendous change of
+direction regarding chip design and test philosophy: Integrating analog and
+digital function blocks on the same \ac{IC} die and package, referred to as
+a \emph{mixed-signal} \ac{IC}.
+Mixed-signal chips are involved in interfacing analog signals like a
+sensor or an \ac{RF} antenna with digital processing power in one package.
+A Mixed-signal \ac{IC} typically combines analog functions like
+an \ac{ADC} or operational amplifiers with digital functions such as
+\ac{DSP} cores.
+
+In earlier days, there was a clear partitioning of \ac{IC}s into analog,
+digital, memory and \ac{RF}.
+For this very reason, the \acp{ATE} were strictly partitioned into separate
+categories of \emph{Analog}, \emph{Logic (digital)}, \emph{Memory}
+and \emph{\acs{RF}} testers.
+
+In the 1990s, the interest in the development of mixed-signal \acp{IC}
+began to rise, and these chips started to gain
+significant market share.
+Mixed-signal \acp{IC} found general use in diverse
+applications from telecommunications to consumer electronics.
+
+The development of \ac{CMOS} technology was particularly significant, as it allowed
+the integration of high-density digital logic with analog circuits on
+the same chip.
+At this time:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item Digital logic was still using large transistors
+    operating at \SI{5}{\volt}
+    \item Design technology succeeded in the development of amplifiers with the
+    same technology (analog building blocks)
+\end{itemize}
+
+In the 2000s, a trend started toward smaller and more power-efficient
+mixed-signal \ac{IC}s, as a response to the increased demand for portable
+electronic devices.
+
+
+This major revolution has raised the need for new test methodologies to support
+this new type of integrated circuits: Standard \ac{ATE} systems were no longer
+sufficient, and mixed-signal \ac{ATE} for \ac{SoC} were developed that operate
+in both analog and digital domains in one mainframe \autocite{Tsuboshita}.
+
+As can be observed in \autoref{tab:analog-vs-digital-signals}, there are
+fundamental differences between analog and digital.
+The complexity in mixed-signal testing arises from the need to accurately
+evaluate the performance of both types of signals.
+
+\begin{table}[]
+    \resizebox{\textwidth}{!}{% Limit table size to text with by reducing font
+        \centering
+        \begin{tabular}{@{}lll@{}}
+            \toprule
+            Property             & Analog Signals                  & Digital Signals                    \\
+            \midrule
+            Data Flow            & Continuous                      & Discrete                           \\
+            Useful Data          & Amplitude, period and frequency & High or Low                        \\
+            Noise Susceptibility & Prone to noise and distortion   & Less prone to noise and distortion \\
+            \bottomrule
+        \end{tabular}
+    } % End resize-box
+    \caption[Analog v.s. Digital signals]{A list of major differences between
+    analog and digital signals.}
+    \label{tab:analog-vs-digital-signals}
+\end{table}
+
+
+
+A mixed-signal chip will operate in both digital and analog domains at the same
+time to deliver a desired output.
+Because analog and digital functions of a mixed-signal \ac{DUT} are not
+independent, a mixed-signal \ac{ATE} contains compartments for digital logic
+test (i.e. scan test), memory test, and analog block test.
+
+For digital \ac{IC}s, \ac{ATE} focuses on logic functionality, timing, and
+data integrity and the test itself involves applying digital test
+patterns and comparing the output against pre-defined lists of correct values
+(expected responses).
+Techniques like \ac{ATPG}, SCAN and \ac{BIST} are well established.
+The fact that digital signals are discrete in time and level makes it easier to
+feed a \ac{DUT} with a set of test patterns.
+
+On the contrary, testing analog \acp{IC} requires more complex
+signal generation and analysis as the testing revolves around parameters
+like voltage levels, frequency response, noise, and distortion.
+
+Testing a mixed-signal chip that combines digital
+and analog signals can prove difficult for multiple reasons, of which:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item Analog test signals must be synchronized to the ATE master clock
+    (synchronous signal generation and synchronous signal acquisition)
+    \item Analog signals exhibit static characteristics such as offset voltage
+    or bias currents, and dynamic characteristics like bandwidth, gain, and
+    phase response.
+\end{itemize}
+
+Testing costs time and money, and we want a \emph{single insertion test}
+approach, therefore, it is desirable to test mixed-signal chips on a single
+\ac{ATE}.
+A \emph{one-size-fit-all} \ac{ATE}~\autocite{Burns} is sought
+in the semiconductor industry.
+The \ac{ATE} must be capable of delivering
+and measuring analog and digital signals with high precision and
+accurate timing.
+\autoref{fig:one-size-fit-all-ate} Shows an abstract view of a mixed-signal
+\ac{ATE}.
+
+\begin{figure}[!h]
+    \centering
+    \printfitgraphics[0.36\textheight]{figures/analog-vs-digital-ate}
+    \caption[Analog v.s. Digital ATE]{A Comparison between
+    expected functionality and differences between analog and digital
+    \ac{ATE}s. A Mixed-signal or \ac{SoC} enabled \ac{ATE} will have a
+    combination of both analog and digital capabilities.}
+    \label{fig:one-size-fit-all-ate}
+\end{figure}
+

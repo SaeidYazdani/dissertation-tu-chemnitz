@@ -1,0 +1,308 @@
+%! Author = Saeid Yazdani
+%! Date = 8/29/2024
+
+
+\section{The FPGA Code for Hardware}
+\label{sec:fpga-software}
+
+The FPGA software is dedicated to the processing of real-time tasks.
+It reads data from the measurement paths,
+executes the control algorithms, and drives \acp{DAC} and \acp{ADC},
+ensuring that the power supply maintains its desired output with precision.
+
+\subsection{Control Register Module}
+\label{subsec:fpga-control-registers}
+
+As stated in \autoref{sec:fpga-mcu-structures}, the FPGA software interacts
+with external and internal entities using registers.
+That is, every setting, measurement data, output data, etc. has a single or
+set of registers dedicated to it where other entities can read from or write to
+these registers.
+
+\autoref{lst:fpga-control-register-constants} shows how the register names,
+addresses and reset values are encapsulated in a package for reusability and
+sharing between other VHDL modules.
+
+\begin{lstlisting}[language=VHDL, caption={Control registers global constants},
+    label={lst:fpga-control-register-constants}]
+package ctrl_register_pkg is
+
+    -- Avalon BUS Attributes
+    constant ADDR_WIDTH : natural :=  7;
+    constant DATA_WIDTH : natural :=  16;
+    -- ...
+
+    -- Custom types
+    type t_comp_array   is array ( natural range <> ) of std_logic_vector(15 downto 0);
+    type t_timing_array is array ( natural range <> ) of std_logic_vector(c_tim_width-1 downto 0);
+    -- ...
+
+    -- Registers Indices
+    constant V_ADC_IN    : natural := 0;
+    constant V_ADC_SCALE : natural := 1;
+    -- ...
+    constant TEST_CONFIG : natural := 126;
+    constant REVISION    : natural := 127;
+
+    -- Registers Addresses
+    constant ADDR_V_ADC_IN : std_logic_vector(ADDR_WIDTH-1 downto 0) := std_logic_vector(to_unsigned( V_ADC_IN    , ADDR_WIDTH ));
+    -- ..
+
+    -- Registers Reset Values
+    constant ResetValue_V_ADC_IN    : std_logic_vector(DATA_WIDTH-1 downto 0) := x"0000";
+    constant ResetValue_V_ADC_SCALE : std_logic_vector(DATA_WIDTH-1 downto 0) := x"1000";
+    -- ...
+
+end package;
+\end{lstlisting}
+
+Each register has an address and a reset value that will be applied on startup
+to ensure system safety by disabling any output from the power supply.
+\hyperref[sec:hvs-fpga-register-map]{Appendix A} contains the complete list
+of registers used in the system.
+
+
+The control register VHDL module manages various data transfer operations and
+state transitions in the system, primarily by controlling read and write access
+to multiple \acs{ADC} and \acs{DAC} registers which are essential for the
+control loop operation.
+
+As shown in \autoref{lst:fpga-control-register-entity}, the module is driven
+by clock and reset signals and defines the inputs and outputs for the
+communication with the microcontroller according to the \emph{AVALON} interface
+followed by all the register port signals and their associated modes.
+
+\begin{lstlisting}[language=VHDL, caption={Control registers entity},
+    label={lst:fpga-control-register-entity}]
+use ctrl_register_pkg.all;
+
+entity ctrl_register is
+    generic(
+        g_aw            : integer := ADDR_WIDTH;
+        g_dw            : integer := DATA_WIDTH;
+        g_revision      : integer := 0
+    );
+    port (
+        clk                   : in  std_logic;
+        rst_n                 : in  std_logic;
+        -- AVALON Interface for communication with the MCU
+        chipselect      : IN  std_logic;
+        address         : IN  std_logic_vector(g_aw -1 downto 0);
+        write_en        : IN  std_logic;
+        read_en         : IN  std_logic;
+        writedata       : IN  std_logic_vector(g_dw -1 downto 0);
+        readdata        : out std_logic_vector(g_dw -1 downto 0);
+        waitrequest     : out std_logic;
+        -- Registers
+        V_ADC_DATA      : IN  std_logic_vector(g_dw -1 downto 0);
+        V_ADC_DATA_EN   : IN  std_logic;
+        V_ADC_IN        : OUT std_logic_vector(g_dw -1 downto 0);
+        -- ...
+        PA_COMP_ARRAY   : OUT t_comp_array  (0 to c_comp_width-1 );
+        TIMING_ARRAY    : OUT t_timing_array(0 to c_comp_width-1 );
+        -- Special output for test generation
+        test_state      : out std_logic_vector(7 downto 0)
+    );
+end entity;
+\end{lstlisting}
+
+\autoref{lst:fpga-control-register-architecture} describes the \ac{RTL}
+description of the control register entity where system registers are
+updated at each clock.
+When the system is powered up or on reset events, safe values of
+the registers will be assigned.
+
+The \emph{AVALON} state machine with various states such as \emph{av\_idle},
+\emph{av\_read} and \emph{av\_write} is part of this \acs{RTL} description.
+In the \emph{av\_idle} state, the module waits for a chip select signal to
+initiate either a read or write operation, depending on the incoming control
+signals.
+When in the \emph{av\_read} state, the module reads data from specified
+addresses corresponding to various ADC and DAC data registers and outputs it
+through a data bus.
+Similarly, in the \emph{av\_write} state, it writes incoming data to the
+appropriate registers.
+
+\pagebreak
+\begin{lstlisting}[language=VHDL, caption={Control registers architecture},
+    label={lst:fpga-control-register-architecture}]
+architecture rtl of ctrl_register is
+
+    -- Signals
+    signal s_v_adc_in    : std_logic_vector(g_dw -1 downto 0);
+    signal s_v_adc_scale : std_logic_vector(g_dw -1 downto 0);
+    -- ...
+
+begin
+
+    -- Increment internal timers
+    s_timer_high <= s_timer(g_dw*2-1 downto g_dw);
+    s_timer_low  <= s_timer(g_dw-1 downto 0);
+
+    p_main : process (clk,rst_n)
+
+        -- AVALON Bus states
+        type av_states is ( av_idle, av_rd_ready, av_wr_ready, av_rd_stop, av_wr_stop, av_write, av_read);
+
+        variable av_state       : av_states;
+        variable v_av_cnt       : unsigned(2 downto 0);
+
+    begin
+
+        if rst_n = '0' then -- Assign RESET values
+            s_v_adc_in                  <=  ResetValue_V_ADC_IN;
+            s_v_adc_scale               <=  ResetValue_V_ADC_SCALE;
+            -- Reset other registers and states...
+
+        elsif rising_edge(clk) then -- Perform clock based operations
+        -- ...
+
+            case av_state is
+                when av_idle => -- Perform idle tasks
+                when av_read => -- Perform read operation
+                -- ...
+            end case;
+        end if;
+    end process;
+
+    -- Set registers
+    V_ADC_IN                       <= s_v_adc_in;
+    V_ADC_SCALE                    <= s_v_adc_scale;
+    -- ...
+
+end architecture;
+\end{lstlisting}
+
+The module also handles special control signals for enabling specific DAC
+outputs and monitoring ADC values.
+This design facilitates the interaction between the system's digital control
+logic and its analog measurement components, enabling precise data acquisition
+and output control in the overall system.
+
+\subsection{ADC and DAC Modules}
+\label{subsec:adc-dac-vhdl-modules}
+
+The \ac{FPGA} issues clocks to \ac{ADC} chips on their \emph{CNV} pins to
+begin conversion and then reads the resulting conversion to be used in
+processing of the next system's update event.
+The interfacing between \acs{ADC} chips and the \ac{FPGA} is done by a
+dedicated \acs{VHDL} module as presented in \autoref{lst:fpga-ltc2386-entity}
+
+\begin{lstlisting}[language=VHDL, caption={LTC2386 entity},
+    label={lst:fpga-ltc2386-entity}]
+ENTITY ltc2386 IS
+    PORT(
+        sys_clk    : in  std_logic;
+        rst_n      : IN  std_logic;
+        -- FPGA controller interface
+        DATA       : OUT std_logic_vector(15 DOWNTO 0);
+        DATA_EN    : OUT std_logic;
+        -- LVDS inputs
+        DCO        : IN  std_logic;
+        DA         : IN  std_logic;
+        DB         : IN  std_logic;
+        -- LVDS outputs
+        CLK_ADC    : OUT std_logic;
+        CNV_EN     : OUT std_logic;
+        -- TEST
+        clk_smpl   : OUT std_logic
+    );
+END ENTITY;
+
+ARCHITECTURE rtl OF ltc2386 IS
+
+    SIGNAL dout         : unsigned(15 DOWNTO 0);
+    -- ...
+    SIGNAL s_cnv_en     : std_logic;
+
+BEGIN
+
+    DATA     <= std_logic_vector(dout) when rst_n = '1' else (others =>'0');
+    data_en  <= '0' when rst_n = '0' else s_data_en ;
+    -- ...
+
+END ARCHITECTURE;
+\end{lstlisting}
+
+Similar to the \acs{ADC}, the \acs{DAC} output is controlled by the FPGA
+and updates are issued by clocking the \emph{CLK} pins of \acs{DAC} chips.
+
+\subsection{Compensation Module}
+\label{subsec:compensation-vhdl-module}
+
+The system is designed to control compensation network parameters based on
+predefined arrays of compensation values and timing intervals.
+The \emph{compensation\_ctrl} entity, defines the interface for the module,
+including input signals for clock, reset, trigger, and arrays containing
+the compensation values and timing data.
+
+The output signals represent the current compensation settings for capacitors
+and resistors in both the pre and power amplifiers
+(two instances of the module).
+
+Internally, the \acs{FSM} operates through a series of states: \emph{idle},
+\emph{run}, \emph{set}, \emph{inc\_vi} and \emph{check\_vi}.
+Upon reset, the system initializes the compensation settings to predefined
+values and clears all counters and indexes.
+
+The \acs{FSM} begins in the idle state, waiting for a rising edge on the
+clock to start the process.
+When triggered, the \acs{FSM} moves into the run state, where it checks if a
+new rising edge has occurred and starts the process.
+Otherwise, it waits until a specified timing interval has passed, as defined by
+the timing array, before updating the compensation values in the set state.
+
+In the set state, the \acs{FSM} loads the next set of compensation values
+from the provided arrays and then increments the index to move to the next set
+of values. It then checks if the index has reached the end of the arrays,
+indicating that all compensation values have been applied.
+If the end is reached, the \acs{FSM} returns to the idle state; otherwise, it
+loops back to the run state to continue applying the next set of compensation
+values.
+
+The final compensation values are sent out through \acs{GPIO} pins of the
+FPGA to the analog relays which control each resistor and capacitor in the
+compensation network.
+
+This system enables precise control over the application of compensation
+parameters, allowing for fine-tuned adjustments in real-time based on the
+predefined sequences and timing intervals based on \acs{DUT} requirements.
+
+\autoref{lst:fpga-compensation-entity} in
+\hyperref[sec:hvs-fpga-compensation-vhdl]{Appendix D} lists the complete VHDL
+code responsible for driving the compensation networks.
+
+\subsection{Control Loop Modules}
+\label{subsec:fpga-control-loop-modules}
+
+As described in \autoref{sec:loopdetails} and \autoref{fig:loop-algo},
+multiple VHDL modules are working in a chain from reading the actual output
+to generating the final output to the \emph{coarse}, \emph{vernier} and
+\emph{set-ponit} DACs.
+
+The averaging module performs a basic summing and division on ADC data
+according to sample numbers set in the configuration register.
+If the averaging is disabled or the sample size is set to one, the module
+simply outputs the actual per-clock readings.
+
+The calibration module will correct ADC's non-linearity and offset according
+to the calibration table fed into the system by operator software
+either at startup or during runtime.
+
+After this stage scaling will be applied and the final output will be
+sent out the output preparation module where the deviation from the set point
+will be calculated and sent out on the appropriate DAC chip accordingly.
+
+The code listings for the modules involved in control loop operations are
+listed in \autoref{lst:fpga-calibration-entity},
+\autoref{lst:fpga-scaling-entity} and \autoref{lst:fpga-outputprep-entity}
+in \hyperref[sec:hvs-fpga-compensation-vhdl]{Appendix D}.
+
+
+
+
+
+
+
+
+

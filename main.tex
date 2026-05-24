@@ -1,0 +1,137 @@
+%! Author = Saeid Yazdani
+%! Date = 5/13/2023
+
+
+
+% Preamble
+\documentclass[8pt,a5paper,twoside,openright]{extbook}
+
+% Load packages that are used in this text
+\input{prem/used_packages}
+\input{prem/variables}
+
+\usepackage[style=numeric, maxnames=8, minnames=8, sorting=none, backend=biber]{biblatex}
+\usepackage{lstmisc}
+\usepackage{amssymb}
+\addbibresource{backmatter/sources.bib} %Import the bibliography file
+
+
+% For embedding info into the normal PDF. PDF/A metadata is supplied through
+% main-pdfa.xmpdata when building main-pdfa.tex.
+\ifdefined\ThesisPdfA
+    \hypersetup{hidelinks}
+\else
+    \hypersetup{
+        pdfauthor={\VARauthorName},
+        pdftitle={\VARthesisTitle},
+        pdfsubject={Dissertation},
+        pdfkeywords={\VARkeywordsEnglish}
+    }
+\fi
+
+% Document
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% FRONT MATTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%% Mandatory stuff %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \frontmatter
+    \pagestyle{empty}
+    \pagenumbering{roman}
+    \setcounter{page}{1}
+    \input{frontmatter/publisher-titlepages}
+    \setcounter{page}{5}
+    \pagestyle{plain}
+    \begin{spacing}{1.5}
+        \input{frontmatter/abstract-en}
+        \cleardoublepage
+        \input{frontmatter/abstract-de}
+        \cleardoublepage
+        \input{frontmatter/acknowledgement}
+        \cleardoublepage
+    \end{spacing}
+
+    %%%% TABLE OF CONTENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%% Add list of figures, tables, etc %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{spacing}{1.25}
+        \renewcommand{\contentsname}{Table of Contents}
+        \tableofcontents
+    \end{spacing}
+    \cleardoublepage
+
+    %For Removing Extra Space in List of Tables and Figures before every chapter
+    \newcommand{\origaddvspace}{\addvspace}
+    \renewcommand{\addvspace}[1]{}
+    \begin{spacing}{1.25}
+        \footnotesize
+        \phantomsection
+        \addcontentsline{toc}{section}{\bf List of Figures}
+        \listoffigures
+    \end{spacing}
+    \cleardoublepage
+    \begin{spacing}{1.25}
+        \phantomsection
+        \addcontentsline{toc}{section}{\bf List of Tables}
+        \listoftables
+    \end{spacing}
+    \cleardoublepage
+    %%%% Add abbreviations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{spacing}{0.5}
+        \phantomsection
+        \addcontentsline{toc}{section}{\bf List of Abbreviations}
+        \input{frontmatter/abbreviations}
+    \end{spacing}
+    \cleardoublepage
+
+    %%%% Add Symbols & Units %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{spacing}{0.75}
+        \phantomsection
+        \addcontentsline{toc}{section}{\bf List of Symbols and Units}
+        \input{frontmatter/symbols}
+    \end{spacing}
+    \cleardoublepage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% MAIN MATTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \mainmatter % Use Arabic page numbering in the main matter
+    \pagenumbering{arabic}
+
+    \input{chapter_one/content}
+
+    \input{chapter_two/content}
+
+    \input{chapter_three/content}
+
+    \input{chapter_four/content}
+
+    \input{chapter_five/content}
+
+    \input{timevariant_loop/content}
+
+    \input{ch_smu_prototype_detials/_ch_smu_proto_main_content}
+
+    \input{ch_hardware_realization/content}
+
+    \input{ch_the_control_software/main}
+
+    \input{ch_tests_and_conclusion/main}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% BACK MATTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \backmatter
+
+    \chapter[Bibliography]{Bibliography}
+    \begin{spacing}{1}
+        \printbibliography[heading=none]
+    \end{spacing}
+
+    % Appendix Stuff
+    \appendix
+    \input{backmatter/appendices/content}
+
+    \clearpage
+    \blankpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

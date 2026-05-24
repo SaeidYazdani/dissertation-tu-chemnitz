@@ -1,0 +1,27 @@
+%! Author = Saeid Yazdani
+%! Date = 8/9/2024
+
+
+% Reset section numbering to A, B, C...
+\renewcommand{\thesection}{\Alph{section}}
+% Reset figure numbering
+\renewcommand{\thefigure}{\Alph{section}.\arabic{figure}}
+% Reset table numbersing
+\renewcommand{\thetable}{\Alph{table}}
+% Reset table numbersing
+\renewcommand{\thelstlisting}{\Alph{lstlisting}}
+
+% Reset figure counter
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{lstlisting}{0}
+
+\chapter[Appendices]{Appendices}
+\newpage
+\input{backmatter/appendices/fpga-registers}
+\newpage
+\input{backmatter/appendices/compensation-rc-values}
+\newpage
+\input{backmatter/appendices/msg-protocol}
+\newpage
+\input{backmatter/appendices/compensation-vhdl}

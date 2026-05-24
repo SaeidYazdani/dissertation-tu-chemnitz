@@ -1,0 +1,81 @@
+%! Author = Saeid Yazdani
+%! Date = 7/7/2024
+
+\section{Effects of Current Limiting Circuits}
+\label{sec:current-limiting-effects}
+
+As stated before, in a typical \ac{ATE} setup, power supplies provide current to
+both the DUT and its decoupling capacitors as well as parasitic capacitances.
+The current going to the capacitors can significantly be based on the total
+capacitance and power-up time set by the test developer.
+As an example, powering up a \SI{3.3}{\volt} \ac{DUT} in \SI{100}{\micro\second}
+with a total circuit capacitance of \SI{20}{\micro\farad} can need up to
+\SI{1}{\ampere} according to \autoref{eq:current-during-capacitor-charge}.
+
+\begin{equation}
+    \label{eq:current-during-capacitor-charge}
+    I = C \frac{dV}{dt}
+\end{equation}
+
+Almost all modern \ac{DPS} provide a programmable current limit option,
+typically in \SI{10}{\milli\ampere} to \SI{50}{\milli\ampere} steps.
+During test development and execution, it is a common practice to protect
+\acp{DUT} from uncontrolled events by setting limits for the maximum current
+a \ac{DPS} is allowed to source into a \ac{DUT}.
+
+If a brief surge in current triggers a preset limit, the circuit will turn off
+the limit once the surge stops, and the DPS will go back to providing the set
+voltage with a delay.
+Depending on the voltage level before the occurrence of a current surge event,
+the actual voltage might need to go higher than the set voltage to make sure the
+problem that caused the high current is settled.
+Therefore the DUT might experience a voltage higher than the set
+voltage for a short period.
+
+If the test developer sets tight current limits, especially during the
+\emph{TEST START} where all the capacitors need to be charged, there is a high
+chance for misbehavior of the voltage rails due to the engagement of the current
+limit circuitry.
+This explains the presence of glitches
+on \autoref{fig:villach-supply-analysis-1v3-test-start-glitch} and other
+similar measurements.
+
+\subsection{Mitigating Current-Limit Induced Glitching}
+\label{subsec:current-limiting-effects}
+
+As stated before, current depends on capacitance and how fast the voltage
+changes, so the highest risk of engaging the current limit and overshooting
+happens during power-up.
+Test developers need to check power-up steps and the current limit.
+Changing voltages by small amounts are less likely to be affected by the
+capacitance and current limit because the voltage change is smaller.
+
+The following points may help with reducing the overshoot and undershoot
+triggered by the current limiting feature of a \ac{DPS}:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item \textbf{Relaxing the current limit:}
+    Depending on internal circuitry and control loop of \ac{DPS} modules, test
+    developers might need to increase current limits by at
+    least \SI{100}{\milli\ampere} per microfarad to reduce the chance of
+    high voltage glitches due to immature activation of current limit circuits.
+
+    \item \textbf{Stepwise increase to target voltage:}
+    Many modern \ac{DPS} allow for voltage step-ups with fine control over time
+    taken by each step.
+    If the \ac{DUT} power requirements allow, test developers can program the
+    \ac{DPS} to reach target voltage in multiple steps, instead of one.
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+%! Author = Saeid Yazdani
+%! Date = 6/22/2024
+
+
+\section{\acs{DPS} Control Loop}
+\label{sub:dps-control-loop}
+
+All \ac{ATE} power supplies are programmable, and the output driver is inside a
+control loop that will sense the target voltage at the \ac{DUT} site.
+\emph{Remote Sense} is mandatory in the era of high supply currents and
+low supply voltages – without remote sensing capabilities, there would be a
+large unregulated voltage drop across the load board that would make the test
+meaningless.
+
+Systems such as \acp{ATE} which exhibit
+significant wiring-related parasitics and variable \ac{DUT} load conditions must
+use remote sensing schemes to compensate for voltage drops in the
+cables between the power supply and the load, ensuring the correct voltage is
+delivered at the load.
+
+A comparison of control loops with and without remote sensing and the
+associated errors is presented in
+\autoref{fig:distributed-arrangement-ate-supply}:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item \textbf{Local Sense:}
+    Without \emph{Remote Sense} and only relying on \emph{Local Sense}, we
+    stabilize the supply voltage at the output of the source, and all wiring
+    effects between source and \ac{DUT} are neglected.
+    Such an arrangement is not suitable for precision measurements
+    (\autoref{fig:distributed-arrangement-ate-supply}-A).
+
+    \item \textbf{Basic Remote Sense:}
+    If we can neglect all inductances of the sense lines because of very low
+    settling times, we may succeed with a simple resistive approach
+    (\autoref{fig:distributed-arrangement-ate-supply}-B).
+
+    \item \textbf{Complex Remote Sense:}
+    Because test times should be short, we need fast settling, and inductive
+    components of the load board, socket and  \ac{DUT} can no longer be
+    neglected (\autoref{fig:distributed-arrangement-ate-supply}-C).
+
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \printfitgraphics[0.62\textheight]{figures/villach-supply-analysis/distributed_arangement_ate_dut_supply}
+    \caption[Comparison of Sensing Arrangements in Supplies]{
+        The distributed arrangement of ATE source and DUT supply pin.
+    }
+    \label{fig:distributed-arrangement-ate-supply}
+\end{figure}
+
+While power supplies with remote sensing compensate for the wiring parasitic,
+there are multiple challenges associated with such structures.
+Implementing remote sensing requires additional wiring and components,
+which will add complexity to the system design and in \ac{ATE} environments, and
+requires dedicated wires on the load board to bring sense lines near the
+\ac{DUT} socket.
+
+This additional wiring introduces additional
+susceptibility to noise and interference as incorrect or poor implementation of
+remote sensing on any section of the \ac{ATE} to \ac{DUT} path can lead to
+instability in the control loop and can potentially contribute to oscillations
+and sporadic glitches seen in \autoref{ch:casestudy-from-ate-to-dut}.
+
+Reducing analog components count and overall complexity of control loop in
+favour of digital solutions can lead to a faster and more accurate transient
+response.
+
+
+
+

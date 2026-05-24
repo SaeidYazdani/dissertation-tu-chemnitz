@@ -1,0 +1,157 @@
+%! Author = Saeid Yazdani
+%! Date = 9/9/2024
+
+
+\section{Conclusion and Future Work}
+\label{sec:conclusion-and-future-work}
+
+\subsection{Conclusion}
+
+The scope of this work was to demonstrate the applicability of a hybrid
+digital-analog approach for power supply design with a dynamic compensation
+scheme for the testing of semiconductors in \acs{ATE} systems.
+
+Advancements in FPGA logic size and speed have enabled the implementation of
+real-time adaptive control schemes.
+These advancements provide the means to address the challenges presented by
+modern semiconductor devices, particularly in ensuring high-quality power
+delivery during testing.
+
+The primary focus of this work was the optimization of signal waveforms at
+the pins of \acs{DUT}s, where anomalies such as ringing, overshoot, and
+undershoot in the supply rails can significantly degrade test quality and yield.
+These anomalies could damage the \acs{DUT} in worst-case scenarios.
+This issue is critical because, although modern devices may survive short
+overvoltage pulses such as ringing, their long-term reliability can be
+compromised due to the potential latent failures induced during the test phase
+and only show up in the field.
+
+As a result, the quality of power rail waveforms is of utmost importance.
+Fast rise and fall times without ringing are essential to avoid any
+potential degradation in device behavior.
+This work demonstrated that safe and predictable waveforms can be achieved
+through adaptive feedback control, where parameter sets are switched dynamically
+— similar to the adaptive positioning systems used in fast robotics.
+
+One of the key challenges discussed in this research was the limitation
+of current-generation \acs{ATE} \acs{DPS}, which are often used in
+ganged-mode to provide the necessary currents for demanding \acs{DUT}s.
+This mode comes with its own set of challenges.
+A single power supply that can provide the necessary current at all common
+voltage levels would be the more flexible solution as proposed in this work.
+
+A prototype system was developed to validate the advantages of this hybrid
+approach.
+Challenges and shortcomings encountered in the proposed
+three-stage driver circuit were studied and solutions were provided.
+
+Measurements demonstrated that modern \acs{FPGA}, \acs{ADC}, and \acs{DAC}
+components allow for rapid responses, which are critical for maintaining
+the stability and precision of the power delivery system.
+
+The primary limitation observed was the amplitude-discrete nature of digital
+signals.
+To overcome this, cascaded converters with coarse and vernier stages were
+developed, achieving the necessary amplitude resolution for precise control.
+
+In conclusion, this work has successfully demonstrated the feasibility and
+advantages of a hybrid digital-analog approach in \acs{ATE} systems, providing
+a pathway for future improvements in semiconductor testing and ensuring more
+robust, reliable device behavior during and after the test phase.
+
+\subsection{Future Work}
+
+
+\noindent\textbf{Upgrading the Digital Block:}
+
+Between the time of starting this research work and the time of writing this
+text, the \acs{FPGA} technology has seen technological leaps in several key
+areas driven by the need for higher performance and improved design flexibility.
+The \acs{HVS} can benefit from new generation of \acs{FPGA} chips
+in the following areas:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item \textbf{Integration of Artificial Intelligence:}
+    FPGAs have significantly evolved to support \ac{AI} and \ac{ML} workloads.
+    Many FPGA families now include dedicated AI engines, such as \ac{TPU} or
+    other neural network accelerators, built into the fabric.
+    These advancements make FPGAs highly competitive for edge AI and machine
+    learning applications that can benefit the \acs{HVS}'s adaptive
+    compensation scheme.
+
+    \item \textbf{SoC Integration:}
+    FPGAs have become highly integrated heterogeneous platforms and feature
+    hardware based embedded processors (e.g., ARM Cortex cores).
+    The \acs{HVS} can significantly benefit from the speed up of
+    communication between the operator software and the FPGA,
+    lower design complexity and smaller footprint on the \ac{PCB}
+    by replacing the discrete \acs{MCU} by an integrated one.
+
+    \item \textbf{High-Speed \acs{I/O}:}
+    Modern \acs{FPGA}s support much higher data rates, often exceeding
+    \SI{100}{\giga\bit\per\second} for transceivers, and they offer built-in
+    support for the latest connectivity standards such as 6th generation
+    \acs{PCIe} and fast \acs{DDR}5.
+    A high \ac{I/O} speed of the \acs{FPGA} in \acs{HVS} can aalow for faster
+    data transactions.
+    Including high-speed external memory can extend the acquisition memory
+    used for both control loop and datapoint storage.
+
+\end{itemize}
+
+\pagebreak
+\noindent\textbf{Upgrading the Analog Block:}
+
+Just like \acs{FPGA}s, there are new and faster power amplifiers,
+\acs{ADC}s and \acs{DAC}s available on the market.
+For the current booster stage, upgrading from silicon-based \acs{MOSFET}s to
+wide bandgap \acs{MOSFET}s (\emph{Silicon Carbide} or \emph{Gallium Nitride})
+can be beneficial in achieving faster response rates.
+\emph{Silicon Carbide} offers lower on-resistance
+and reduced switching losses, which increases efficiency at higher frequencies.
+Faster switching speeds and high thermal conductivity of such \acs{MOSFET}s
+are essential factors to consider.
+These new technologies should be evaluated in future iterations of the
+\acs{HVS}.
+
+\noindent\textbf{Synchronization of Multiple \acs{HVS} Units:}
+
+Exact synchronization between \acs{DPS} units is mandatory
+for modern devices with multiple voltage rail requirements (e.g., \SI{5}{\volt}
+for analog, \SI{3.3}{\volt} for I/O, and \SI{1.3}{\volt}
+for core supplies) as otherwise there is a high risk of latch-up.
+To mitigate this, a fixed startup sequence for all individual supply rails is
+necessary.
+As the proposed system voltages are monitored digitally, this setup phase can
+be easily programmed between multiple units of the proposed system to ensure
+proper sequencing and avoid related failures.
+
+\noindent\textbf{Integration in Recognized ATE Systems:}
+
+The \acs{HVS} prototype was developed and tested as a stand-alone
+\acs{DPS}/\acs{SMU}.
+Integration of this system in industry-standard \ac{ATE} systems requires
+direct collaboration with \acs{ATE} manufacturers.
+The current iteration of the \acs{HVS} offers a simple but effective communication
+protocol, and library files for easy integration are well prepared.
+Another option to expose the \acs{HVS} to other hardware is the integration of
+the \acs{HVS}'s \acs{API} as an extension to the already available
+\emph{SpecScribe} \autocite{markert, schott}, a specification tool for analog
+hardware developed at TU Chemnitz.
+
+\noindent\textbf{Moving to a Single Board Design:}
+
+The current iteration of the \acs{HVS} hardware uses the backplane-based
+prototyping approach. The driver stage, analog frontend and control boards
+are the most critical sections of the hardware where any signal distortion can
+affect the overall behavior of the system.
+The signals travel through multiple connectors and the backplane to
+reach their destination.
+Because of this, the communication rates between system components are not
+at their maximum as the priority in the prototype was
+the proof of functionality.
+By combining critical sections of the hardware in one board problems can
+be avoided and maximum transfer rates can be achieved.
+
+
+

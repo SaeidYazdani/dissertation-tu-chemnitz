@@ -1,0 +1,93 @@
+%! Author = Saeid Yazdani
+%! Date = 4/9/2024
+
+\chapter{\acs{ATE} Power Supply Diagnostics}
+\label{ch:diagnostics}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introduction}
+\label{sec:ch-diagnostics-introduction}
+
+In the previous chapters, the contributing elements to integrity
+and health of test signals and quality of the power delivered at the \ac{DUT}
+site were evaluated.
+
+We strictly enforce a \emph{Full Test-Setup Analysis} using advanced
+socket-integrated analysis tools (\ac{VDUT} analysis).
+During the test program execution, a test engineer must be able to
+understand all parasitic effects that originate from load board subtleties
+like non-equal length design, high-impedance \ac{DUT} support lines, etc.
+
+The performance of the \acs{ATE} \acs{DPS} units were evaluated by performing
+direct measurement on the existing load board and \ac{VDUT} in the socket.
+This assessment revealed that state-of-the-art \ac{DPS} designs have
+shortcomings in their control mechanism and that they are not designed to
+guarantee range switching without massive errors (there is a considerable
+sensitivity to sequencing and timing within the firmware code).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{chapter_five/diagnostics/content}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{chapter_five/capacitive_loads/content}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{chapter_five/current_limit/content}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{chapter_five/ganged_mode_dps/content}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{chapter_five/dps_control_loop/content}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusion}
+\label{sec:diagnostics-conclusion}
+
+In this chapter, we examined the factors causing problems with \ac{ATE}'s
+\ac{DPS} units.
+Some of the issues are caused by the load board design, but most are due to the
+\ac{DPS} units struggling with capacitive loads and higher current demands.
+
+Major glitches and unwanted voltages at the DUT site point to issues with
+synchronizing multiple DPS channels, which is necessary for providing the
+required current.
+
+The analog control loop of the DPS is a major limitation.
+Unlike digital systems, analog loops cannot be easily adjusted for each
+\ac{DUT}'s characteristics to improve response times and compensate for load
+conditions.
+Analog loops are more prone to noise and drift, affecting performance and
+stability.
+They lack the precision and flexibility of digital systems, which can offer
+more consistent operation and better performance through software adjustments.
+
+Switching to digital control loops in DPS units could solve many of the
+discussed problems.
+Digital control offers advanced tools for real-time monitoring and
+troubleshooting, making it easier to maintain and improve performance and are
+more scalable and adaptable, better suited to handle the varying demands
+of \ac{ATE} systems.
+
+Furthermore, it is crucial to develop a solution with a sufficient current
+output rating, eliminating the need for ganging configurations.
+Avoiding ganging will reduce the synchronization and timing issues
+related to relay switching and improve the overall reliability and simplicity
+of the system.
+
+In conclusion, to improve the reliability and performance of \ac{ATE} power
+supplies, it is important to consider moving from analog to digital control
+loops.
+Additionally, we need to ensure that power supplies have enough current
+output to avoid the complications of ganging.
+This change would allow for more precise, adaptable, and stable power delivery,
+improving the accuracy of test signals at the \ac{DUT} site.
+
+In the following chapters, we will explore the concept of designing a hybrid
+analog-digital \ac{DPS}, focusing on a time-variant control loop.
+The discussion will include an evaluation of this approach and a detailed
+insight into the implementation of a prototype.
+This proposed solution aims to combine the strengths of both analog and
+digital systems, potentially offering enhanced performance and
+flexibility in \ac{ATE} power supplies.

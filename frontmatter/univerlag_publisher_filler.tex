@@ -1,0 +1,173 @@
+% 24.01.2025
+
+% Schriftgröße 9pt für Druck in DIN A5
+\documentclass[a5paper,9pt,twoside,headings=openright]{scrbook}
+
+\usepackage{ifluatex}
+\usepackage[ngerman]{babel}
+\usepackage{enumerate}
+\usepackage{ragged2e}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{colortbl}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage[pdfborder={0 0 0}]{hyperref}
+\usepackage{microtype}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{extsizes}
+\usepackage{newtxtext,newtxmath}
+\usepackage{xifthen}
+
+\RequirePackage[default,sfdefault]{roboto}
+\RequirePackage{roboto-mono}
+
+\RequirePackage[
+    paper=a5paper,
+    nohead,
+    includefoot,
+    bindingoffset=0.0cm,
+    top=2.5cm,
+    left=2.5cm,
+    right=1.5cm,
+    bottom=1.0cm,
+    footskip=1.8cm,
+]{geometry}
+
+\parindent0mm
+
+\newboolean{schriftenreihe}
+\setboolean{schriftenreihe}{false}
+
+\newcommand{\cclizenz}{ccby}
+
+\begin{document}
+
+    \begingroup
+    \pagestyle{empty}
+
+% Titelseite von Hand
+    Saeid Yazdani
+
+    \vspace*{5mm}
+
+    Design of a Hybrid Digital-Analog Power Supply for Semiconductor Testing on Automated Test Equipment
+
+    \newpage
+
+    \ifthenelse{\boolean{schriftenreihe}}{
+        \textbf{Wissenschaftliche Schriftenreihe\\
+        Muster-Schriftenreihentitel}
+
+        \vspace*{4mm}
+
+        Band 1
+
+        \vspace*{4mm}
+
+        Prof. Dr. Helena Herausgeberin (Herausgeberin)}{\mbox{}}
+
+    \newpage
+
+    \begin{large}
+        \begin{center}
+
+            \begin{minipage}[t][50mm][t]{\textwidth}
+                \begin{center}
+
+                    Saeid Yazdani
+
+                    \vspace*{7mm}
+
+                    \textbf{\Large Design of a Hybrid Digital-Analog Power Supply for\\
+                    Semiconductor Testing on Automated Test Equipment}
+
+                \end{center}
+            \end{minipage}
+
+            \vfill
+
+            \includegraphics[width=0.5\textwidth]{TU_Chemnitz_positiv_schwarz.pdf}
+
+            \vspace*{5mm}
+
+            \textbf{Universitätsverlag Chemnitz\\
+            2026}
+
+        \end{center}
+    \end{large}
+
+    \newpage
+
+    \begin{small}
+
+        \textbf{Impressum}\\
+
+        \textbf{Bibliografische Information der Deutschen Nationalbibliothek}\\
+        Die Deutsche Nationalbibliothek verzeichnet diese Publikation in der Deutschen\\
+        Nationalbibliografie; detaillierte bibliografische Angaben sind im Internet über\\
+        \url{https://www.dnb.de} abrufbar.\\
+
+        \vspace*{2mm}
+
+        Die vorliegende Arbeit wurde von der Fakultät für Elektrotechnik und
+        Informationstechnik der Technischen Universität Chemnitz als Dissertation zur
+        Erlangung des akademischen Grades Dr.-Ing. genehmigt.\\
+
+        Tag der Einreichung: 29.10.2024\\
+        Tag der Verteidigung: 06.08.2025\\
+
+        Gutachter:\\
+        Prof. Dr.-Ing. Ulrich Heinkel\\
+        Prof. Dr.-Ing. Claus Kuntzsch
+
+        \vspace*{\fill}
+
+        \ifthenelse{\equal{\cclizenz}{ccby}}{
+            \includegraphics[width=2.5cm]{cc-by.png}
+
+            Das Werk -- ausgenommen Zitate, Cover, Logo TU Chemnitz und Bildmaterial im
+            Text -- steht unter der Creative-Commons-Lizenz\\
+            Namensnennung 4.0 International \mbox{(CC BY 4.0)}\\
+            \url{https://creativecommons.org/licenses/by/4.0/deed.de}\\}{
+            \includegraphics[width=2.5cm]{cc-by-sa.png}
+
+            Das Werk -- ausgenommen Zitate, Cover, Logo TU Chemnitz und Bildmaterial im
+            Text -- steht unter der Creative-Commons-Lizenz\\
+            Namensnennung -- Weitergabe unter gleichen Bedingungen 4.0 International \mbox{(CC BY-SA 4.0)}\\
+            \url{https://creativecommons.org/licenses/by-sa/4.0/deed.de}\\}
+
+        ORCID Saeid Yazdani:\\
+        \url{https://orcid.org/0009-0001-0774-4016}\\
+
+        \vspace*{2mm}
+
+        \textbf{Universitätsverlag Chemnitz}\\
+        Straße der Nationen 33, 09111 Chemnitz\\
+        \href{mailto:uni-verlag@bibliothek.tu-chemnitz.de}{uni-verlag@bibliothek.tu-chemnitz.de}\\
+        \url{https://www.tu-chemnitz.de/ub/univerlag}\\
+
+        Gedruckt auf FSC-zertifiziertem Papier durch\\
+        CPI Druckdienstleistungen GmbH, Ferdinand-Jühlke-Straße 7, 99095 Erfurt\\
+
+        ISBN: 978-3-96100-323-5 (print)\\
+        ISBN: 978-3-96100-324-2 (online)\\
+        DOI: \url{https://doi.org/10.51382/978-3-96100-324-2}\\
+
+        \hrule \mbox{}\\
+        Titelgrafik: Saeid Yazdani
+
+    \end{small}
+
+    \newpage
+    \endgroup
+
+\end{document}

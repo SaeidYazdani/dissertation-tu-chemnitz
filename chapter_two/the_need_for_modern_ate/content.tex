@@ -1,0 +1,109 @@
+%! Author = Saeid Yazdani
+%! Date = 12/17/2023
+
+
+\section{The Need for Modern Test Equipment}
+\label{sec:need-modern-test-equipment}
+
+The growth in \ac{IC} technology is driven by the need for more
+functions per device while simultaneously reducing power consumption to comply
+with environmentally friendly directives and extend the operational time of battery
+powered applications.
+This demand pushes the evolution of \ac{IC} technology almost on a daily basis.
+
+Logic and memory cells have traditionally driven reductions in technology size \autocite{8776580}, 
+and the increasing integration density of digital circuits raises the complexity of digital logic 
+testing. At the same time, high-speed \ac{I/O} interfaces such as \ac{PCIe}, \ac{USB}, and \ac{HDMI} 
+are now common in high-volume consumer products. These interfaces introduce challenges more typical 
+of analog and RF testing, including signal integrity, timing, and jitter, which significantly impact 
+test coverage, cost, and overall testing strategy.
+
+With each new technology, novel failure mechanisms emerge, making advanced
+silicon debugging and yield learning critical during the ramp-up of
+processes.
+Additionally, emerging trends in 3D packaging technologies are pushing the
+limits of testing at the probe stage \autocite{8480435}.
+
+\ac{EV} development has introduced the demand for smart components with high power ratings. 
+Initially, discrete switching components needed \SI{70}{\volt} to \SI{100}{\volt} maximum drain 
+voltage for power rails of \SI{12}{\volt} to \SI{48}{\volt}, with currents typically below 
+\SI{50}{\ampere}. With the introduction of \ac{EV}s, switching components capable of withstanding 
+up to \SI{1}{\kilo\volt} and currents in the range of \SI{100}{\ampere} to \SI{1000}{\ampere} 
+became necessary, as motor power reaches several hundred kilowatts. This trend initiated the demand 
+for high-power components, and today state-of-the-art \ac{ATE} features both low-voltage and 
+high-voltage sections designed to handle such high currents safely and reliably.
+
+When it comes to testing and qualification of components, there is a broad
+range of properties associated with \ac{DUT}s that need testing and
+qualification:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item \textbf{\emph{Type:}} Is the \ac{DUT} a discrete component, an integrated solution, or a MEMS device?
+    \item \textbf{\emph{Power rating:}} Operating voltage and current ranges, including supply voltages.
+    \item \textbf{\emph{Pin Count:}} Number of \ac{I/O}, control, and power pins.
+    \item \textbf{\emph{Function:}} Functions of the \ac{DUT}: analog, digital, mixed-signal, or MEMS.
+    \item \textbf{\emph{Frequency:}} Operating frequency or bandwidth specifications for signal processing or MEMS actuation.
+\end{itemize}
+
+The vast number of different components and, in the case of \ac{SoC}s, different
+functional blocks, would require an \ac{ATE} that can cover all possible
+scenarios.
+This raises the question for an most economical yet reliable solution
+for testing and qualification.
+
+Today, a single \ac{ATE} is responsible for performing
+all the required tests on a given \ac{DUT}.
+This test strategy is mandatory when the functional blocks of a \ac{DUT} can
+not be tested independently.
+For example, a mixed-signal \ac{IC} may require simultaneous stimulation of its
+analog block to check for the correctness of its digital block's output.
+
+The wide range of technological and functional variations among components makes it challenging 
+for a single \ac{ATE} to cover all possible test scenarios, including different power ratings 
+and operating frequencies. Modern mixed-signal devices and \ac{SoC}s, however, can often be 
+tested on a single tester, since most or all functional blocks can be active simultaneously.
+
+\subsection{How \acs{DfT} Influences \acs{ATE} requirements}
+\label{subsec:properties-of-modern-ate}
+
+Due to advances in the equipment
+industry, modern \ac{ATE}s exist that cover all
+test requirements and scenarios for state-of-the-art \acp{DUT}.
+
+Such \ac{ATE}s are flexible and modular, allowing for on-demand
+removal and insertion of modules to provide test facilities.
+Such modules include:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+    \item Analog signal processing with \ac{DSP} instrumentation.
+    \item Analog power processing with \ac{SMU}s in
+    \SI{}{\kilo\volt} or \SI{}{\kilo\ampere} range.
+    \item Digital core testing, SCAN or \ac{BIST}.
+    \item Memory test with algorithmic pattern generator hardware\footnote{
+        Modern SoCs incorporate Memory BIST that is accessed via SCAN paths.}.
+    \item \ac{RF} testing in \SI{}{\giga\hertz} range for modern communication.
+\end{itemize}
+
+A modern \ac{ATE} needs to provide a set of key features:
+
+\begin{itemize}[topsep=8pt,itemsep=4pt,partopsep=4pt, parsep=4pt]
+
+    \item \textbf{\emph{High-Speed:}} \ac{ATE}'s rate of stimulation
+    should be high enough to test all functions of \acp{DUT}.
+
+    \item \textbf{\emph{Precise and accurate:}} Confidence of PASS/FAIL results
+    are highly dependent on the precision and accuracy of generated
+    and measured signals in terms of voltage, current and timing.
+
+    \item \textbf{\emph{Parallelism:}} \acp{ATE} are able to
+    test multiple \acp{DUT} at the same time through multi-site capabilities.
+
+    \item \textbf{\emph{Scalability:}} Modern \acp{ATE}
+    keep up with new technologies by allowing hardware and
+    software updatability without the need for a total overhaul or going
+    obsolete.
+
+\end{itemize}
+
+
+

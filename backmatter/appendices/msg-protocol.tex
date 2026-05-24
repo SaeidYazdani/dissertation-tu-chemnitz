@@ -1,0 +1,81 @@
+%! Author = Saeid Yazdani
+%! Date = 8/31/2024
+
+
+\section{Serial Protocol Codes}
+\label{sec:serial-protocol-commands}
+
+\begingroup
+
+
+\renewcommand{\arraystretch}{1.3} % Adjust row height padding
+\setlength{\tabcolsep}{2pt} % Adjust horizontal padding in table cells
+
+\scriptsize % Reduce font size
+\setlength{\tabcolsep}{2pt} % Further reduce space between columns
+
+\begin{longtable}{|>{\centering\arraybackslash}p{0.55cm}|>{\raggedright\arraybackslash}p{1.7cm}|>{\centering\arraybackslash}p{0.9cm}|>{\raggedright\arraybackslash}p{4.35cm}|>{\centering\arraybackslash}p{1cm}|}
+    \hline
+    \textbf{\#} & \textbf{Name}    & \textbf{Value} & \textbf{Description}                                               & \textbf{Target} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{\#} & \textbf{Name}    & \textbf{Value} & \textbf{Description}                                               & \textbf{Target} \\
+    \hline
+    \endhead
+
+    1              & PROTO\_START     & 0xC3           & Start byte                                                         & -               \\
+    \hline
+    2              & PROTO\_END       & 0x3C           & End byte (stop)                                                    & -               \\
+    \hline
+    3              & READ             & 0x7E           & Read a single register                                             & FPGA            \\
+    \hline
+    4              & WRITE            & 0x81           & Write to a single register                                         & FPGA            \\
+    \hline
+    5              & CS               & 0x99           & Request CHIP\_SELECT from FPGA                                     & FPGA            \\
+    \hline
+    6              & RESET\_FPGA      & 0xFG           & Forces the FPGA to reset itself                                    & FPGA            \\
+    \hline
+    7              & VI               & 0xF9           & Change V/I Range and gain                                          & GPIO to ADC     \\
+    \hline
+    8              & SUPPLY           & 0xE1           & Change switching supply output                                     & SPI to PSUs     \\
+    \hline
+    9              & LIMITER          & 0x8F           & Change limiter resistor value                                      & SPI to Limiter  \\
+    \hline
+    10             & PAMP             & 0xCF           & Change pre-amp setting                                             & SPI to Amp      \\
+    \hline
+    11             & PINRELAY         & 0xCA           & Open/Close output relay                                            & GPIO to ADC     \\
+    \hline
+    12             & READ\_DPRAM      & 0xE5           & Initiate waveform read procedure                                   & FPGA            \\
+    \hline
+    13             & TRANS\_DPRAM     & 0xE7           & Read from waveform memory                                          & FPGA            \\
+    \hline
+    14             & SEQ\_DATA        & 0xDA           & Initiate communication with sequencer memory                       & FPGA            \\
+    \hline
+    15             & SEQ\_TRANSFER    & 0xCE           & Transfer data to sequencer memory                                  & FPGA            \\
+    \hline
+    16             & SET\_PSU\_SWITCH & 0x32           & Change Analog power supply (old)                                   & GPIO to PSU     \\
+    \hline
+    17             & AMP\_CTRL        & 0x83           & Configure Amplifier control line                                   & GPIO to Amp     \\
+    \hline
+    18             & WRITE\_MULTI     & 0xFC           & Write to multiple registers                                        & FPGA            \\
+    \hline
+    19             & READ\_MULTI      & 0xFA           & Read from multiple registers                                       & FPGA            \\
+    \hline
+    20             & CHANGE\_RANGE    & 0xF8           & Set multiple subsystems for total change or range and control mode & All boards \\
+    \hline
+    21             & CONTROL\_MODE    & 0xF6           & Switch between Voltage or Current source mode                      & FPGA            \\
+    \hline
+    22             & QUERY\_STATE     & 0x92           & Reads current configuration of the system                          & All boards      \\
+    \hline
+    23             & READ\_RAM\_INIT  & 0xA2           & Initialize reading from a specific internal memory of the FPGA & FPGA \\
+    \hline
+    24             & READ\_RAM        & 0xA1           & Read data from a specific internal memory of the FPGA              & FPGA            \\
+    \hline
+    25             & INIT\_TEST       & 0xA3           & Initialize a given test routine                                    & FPGA            \\
+    \hline
+    26             & TRIG\_TEST       & 0xA4           & Starts a previously initialized test routine                       & Systemwide      \\
+    \hline
+\end{longtable}
+\endgroup
